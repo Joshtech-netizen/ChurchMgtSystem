@@ -1,6 +1,6 @@
 Options -MultiViews
 RewriteEngine On
-RewriteBase /backend/api/
+RewriteBase /church-system/backend/api/
 
 # If the request is not a real folder or file, send it to index.php
 RewriteCond %{REQUEST_FILENAME} !-d
