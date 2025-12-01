@@ -1,8 +1,8 @@
-##Church Management System - Project Guide
+## Church Management System - Project Guide
 
 Welcome to your project! This document outlines the professional structure we're building.
 
-##Core Architecture
+## Core Architecture
 
 We are building a "decoupled" application. This is a best practice.
 
@@ -10,7 +10,7 @@ Backend (PHP): A REST API built with object-oriented PHP. It only handles data, 
 
 Frontend (React): A modern SPA (Single Page Application). It provides the entire user interface and fetches data from your PHP backend by making API calls.
 
-##Part 1: Backend (PHP) Setup
+## Part 1: Backend (PHP) Setup
 
 Your PHP code will live in a folder (e.g., backend/). We are using a simple "Front Controller" pattern, which is the basis for all modern PHP frameworks (like Laravel or Symfony).
 
@@ -30,7 +30,7 @@ Folder Structure:
 
 Key Files: I've generated the 4 most important PHP files for you.
 
-##Part 2: Frontend (React) Setup
+## Part 2: Frontend (React) Setup
 
 Your React code will live in a separate folder (e.g., frontend/). The best way to start a "real" project is with create-react-app.
 
@@ -59,7 +59,7 @@ Key Files: I've generated 3 key files to add to your frontend/src/ folder to get
 
 Your Next Steps (The Plan)
 
-##Backend:
+## Backend:
 
 Create a backend folder and place the api folder (with all its generated files) inside it.
 
@@ -73,7 +73,7 @@ Create the members table in your database.
 
 Test your API in a browser: http://localhost/backend/api/members (You should see the JSON!)
 
-##Frontend:
+## Frontend:
 
 Run npx create-react-app@latest frontend as described above.
 
