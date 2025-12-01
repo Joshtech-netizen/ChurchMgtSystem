@@ -1,38 +1,82 @@
-.App {
-  text-align: center;
+/* Modern Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #f4f7f6;
+  color: #333;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Layout */
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+thead {
+  background-color: #3498db;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Badges for Status */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.active { background-color: #e2f0cb; color: #4caf50; }
+.inactive { background-color: #ffbcb5; color: #f44336; }
+.visitor { background-color: #dbeaff; color: #2196f3; }
+
+/* Buttons */
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
 }
