@@ -1,4 +1,4 @@
-### Church Management System - Project Guide
+## Church Management System - Project Guide
 
 Welcome to your project! This document outlines the professional structure we're building.
 
