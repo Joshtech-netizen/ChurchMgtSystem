@@ -29,15 +29,9 @@ const Sidebar = () => {
                 Church Admin
             </h2>
             <nav>
-                <Link to="/" style={linkStyle} onMouseOver={(e) => e.target.style.background = '#34495e'} onMouseOut={(e) => e.target.style.background = 'transparent'}>
-                    📊 Dashboard
-                </Link>
-                <Link to="/members" style={linkStyle} onMouseOver={(e) => e.target.style.background = '#34495e'} onMouseOut={(e) => e.target.style.background = 'transparent'}>
-                    👥 Members
-                </Link>
-                <Link to="#" style={{...linkStyle, opacity: 0.5, cursor: 'not-allowed'}}>
-                    📅 Events (Coming Soon)
-                </Link>
+                <Link to="/" style={linkStyle}>📊 Dashboard</Link>
+                <Link to="/members" style={linkStyle}>👥 Members</Link>
+                <Link to="/donations" style={linkStyle}>💰 Donations</Link>
             </nav>
         </div>
     );
