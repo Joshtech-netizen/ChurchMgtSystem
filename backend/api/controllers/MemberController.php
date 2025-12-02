@@ -16,7 +16,7 @@ class MemberController {
         }
     }
 
-    // Handles /members (GET all, POST new)
+    // Handle /members (GET ALL, POST)
     private function processCollectionRequest($method) {
         switch ($method) {
             case 'GET':
@@ -26,44 +26,33 @@ class MemberController {
                 break;
 
             case 'POST':
-                // Get raw JSON data
                 $data = json_decode(file_get_contents("php://input"));
-
-                // Validate basic data
-                if(!empty($data->first_name) && !empty($data->last_name) && !empty($data->email)) {
-                    $this->member->first_name = $data->first_name;
-                    $this->member->last_name = $data->last_name;
-                    $this->member->email = $data->email;
-                    $this->member->phone = $data->phone ?? '';
-                    $this->member->status = $data->status ?? 'active';
-
+                if($this->validate($data)) {
+                    $this->fillModel($data);
                     if($this->member->create()) {
                         http_response_code(201);
-                        echo json_encode(["message" => "Member created successfully."]);
+                        echo json_encode(["message" => "Member created."]);
                     } else {
                         http_response_code(503);
                         echo json_encode(["message" => "Unable to create member."]);
                     }
                 } else {
                     http_response_code(400);
-                    echo json_encode(["message" => "Incomplete data. First Name, Last Name and Email are required."]);
+                    echo json_encode(["message" => "Incomplete data."]);
                 }
                 break;
 
             default:
-                http_response_code(405); // Method Not Allowed
-                header("Allow: GET, POST");
-                break;
+                http_response_code(405); break;
         }
     }
 
-    // Handles /members/{id} (GET one, PUT update, DELETE)
+    // Handle /members/{id} (GET ONE, PUT, DELETE)
     private function processResourceRequest($method, $id) {
         $this->member->id = $id;
         
-        // Check if ID exists first
-        $check = $this->member->read_single();
-        if($check->rowCount() == 0) {
+        // Ensure member exists
+        if($this->member->read_single()->rowCount() == 0) {
             http_response_code(404);
             echo json_encode(["message" => "Member not found."]);
             return;
@@ -71,14 +60,50 @@ class MemberController {
 
         switch ($method) {
             case 'GET':
-                $row = $check->fetch(PDO::FETCH_ASSOC);
+                $row = $this->member->read_single()->fetch(PDO::FETCH_ASSOC);
                 echo json_encode($row);
                 break;
-            // PUT and DELETE can be added here later
-            default:
-                http_response_code(405);
+
+            case 'PUT': // Update
+                $data = json_decode(file_get_contents("php://input"));
+                if($this->validate($data)) {
+                    $this->fillModel($data);
+                    if($this->member->update()) {
+                        echo json_encode(["message" => "Member updated."]);
+                    } else {
+                        http_response_code(503);
+                        echo json_encode(["message" => "Unable to update member."]);
+                    }
+                } else {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Incomplete data."]);
+                }
                 break;
+
+            case 'DELETE': // Delete
+                if($this->member->delete()) {
+                    echo json_encode(["message" => "Member deleted."]);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(["message" => "Unable to delete member."]);
+                }
+                break;
+
+            default:
+                http_response_code(405); break;
         }
+    }
+
+    private function validate($data) {
+        return !empty($data->first_name) && !empty($data->last_name) && !empty($data->email);
+    }
+
+    private function fillModel($data) {
+        $this->member->first_name = $data->first_name;
+        $this->member->last_name = $data->last_name;
+        $this->member->email = $data->email;
+        $this->member->phone = $data->phone ?? '';
+        $this->member->status = $data->status ?? 'active';
     }
 }
 ?>
