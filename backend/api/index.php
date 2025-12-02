@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 include_once 'config/Database.php';
 include_once 'models/Member.php';
 include_once 'controllers/MemberController.php';
+include_once 'models/Donation.php';
+include_once 'controllers/DonationController.php'; 
 
 // 4. Parse the URL (e.g., localhost/backend/api/members)
 // The .htaccess file will send the path to $_GET['url']
@@ -32,6 +34,11 @@ switch ($resource) {
         $controller = new MemberController($db);
         $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
+        case 'donations':
+        $controller = new DonationController($db);
+        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        break;
+        
     default:
         http_response_code(404);
         echo json_encode(["message" => "Resource not found"]);
