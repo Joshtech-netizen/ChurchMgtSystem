@@ -32,7 +32,7 @@ const Sidebar = () => {
                 <Link to="/" style={linkStyle}>📊 Dashboard</Link>
                 <Link to="/members" style={linkStyle}>👥 Members</Link>
                 <Link to="/donations" style={linkStyle}>💰 Donations</Link>
-                Add `<Link to="/attendance" style={linkStyle}>📋 Attendance</Link>
+                <Link to="/attendance" style={linkStyle}>📋 Attendance</Link>
             </nav>
         </div>
     );
