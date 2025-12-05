@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import MemberList from './components/MemberList';
 import DonationList from './components/DonationList'; // We will create this next!
 import './App.css';
+import AttendancePage from './components/AttendancePage';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
              <Route path="/" element={<Dashboard />} />
              <Route path="/members" element={<MemberList />} />
              <Route path="/donations" element={<DonationList />} />
-             <Route path="/attendance" element={<Attendance />} />
+             <Route path="/attendance" element={<AttendancePage />} />
            </Routes>
         </div>
       </div>
