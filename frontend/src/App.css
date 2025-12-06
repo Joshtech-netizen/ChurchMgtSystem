@@ -1,82 +1,159 @@
-/* Modern Reset */
+/* 1. Import Poppins Font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* 2. Define our Color Palette */
+:root {
+  --primary-blue: #0056b3;       /* Main Action Color */
+  --sidebar-blue: #002b59;       /* Darker Navy for Sidebar */
+  --light-blue-bg: #f0f4f8;      /* Page Background */
+  --white: #ffffff;
+  --text-dark: #333333;
+  --text-light: #777777;
+  --success: #28a745;
+  --danger: #dc3545;
+  --shadow: 0 4px 12px rgba(0, 86, 179, 0.1); /* Subtle Blue Shadow */
+}
+
+/* 3. Global Reset */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif; /* Apply Font Globally */
 }
 
 body {
-  background-color: #f4f7f6;
-  color: #333;
+  background-color: var(--light-blue-bg);
+  color: var(--text-dark);
 }
 
-/* Layout */
+/* 4. Layout & Containers */
 .container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 30px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+h1, h2, h3 {
+  color: var(--sidebar-blue);
+  font-weight: 600;
 }
 
 h1 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #3498db;
+  margin-bottom: 25px;
+  border-bottom: 3px solid var(--light-blue-bg);
   padding-bottom: 10px;
 }
 
-/* Tables */
+/* 5. Modern Tables */
 .table-wrapper {
   overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  background: var(--white);
 }
 
 thead {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--primary-blue);
+  color: var(--white);
 }
 
-th, td {
-  padding: 12px 15px;
+th {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  padding: 15px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+}
+
+td {
+  padding: 15px;
+  border-bottom: 1px solid #eef2f7;
+  color: #555;
 }
 
 tr:hover {
-  background-color: #f1f1f1;
+  background-color: #eef6ff; /* Very light blue hover */
 }
 
-/* Badges for Status */
-.badge {
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-weight: bold;
-  text-transform: capitalize;
-}
-
-.active { background-color: #e2f0cb; color: #4caf50; }
-.inactive { background-color: #ffbcb5; color: #f44336; }
-.visitor { background-color: #dbeaff; color: #2196f3; }
-
-/* Buttons */
+/* 6. Buttons */
 .btn {
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
 .btn-primary {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  box-shadow: 0 4px 6px rgba(0, 86, 179, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #004494;
+  transform: translateY(-1px);
+}
+
+/* 7. Status Badges */
+.badge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.active, .present, .tithe { background-color: #d4edda; color: #155724; } /* Green-ish */
+.inactive, .absent { background-color: #f8d7da; color: #721c24; } /* Red-ish */
+.visitor, .offering { background-color: #cce5ff; color: #004085; } /* Blue-ish */
+
+/* 8. Dashboard Cards */
+.dashboard-grid {
+    display: flex;
+    gap: 25px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 250px;
+    padding: 25px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border-left: 5px solid var(--primary-blue); /* Blue accent line */
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h3 {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--sidebar-blue);
+    margin: 0;
 }
