@@ -19,6 +19,7 @@ include_once 'models/Donation.php';
 include_once 'controllers/DonationController.php'; 
 include_once 'models/Attendance.php';
 include_once 'controllers/AttendanceController.php';
+include_once 'controllers/DashboardController.php';
 
 // 4. Parse the URL (e.g., localhost/backend/api/members)
 // The .htaccess file will send the path to $_GET['url']
@@ -45,7 +46,13 @@ switch ($resource) {
         // Note: Attendance usually doesn't need an ID in the URL, mostly Date query params
         $controller->processRequest($_SERVER["REQUEST_METHOD"]);
         break;
-        
+        case 'dashboard':
+        $controller = new DashboardController($db);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $controller->getStats();
+        }
+        break;
+
     default:
         http_response_code(404);
         echo json_encode(["message" => "Resource not found"]);
