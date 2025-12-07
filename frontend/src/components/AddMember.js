@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 
 const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
-    // 1. Initialize State
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -12,7 +11,6 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
     });
     const [error, setError] = useState('');
 
-    // 2. Load data if we are editing
     useEffect(() => {
         if (memberToEdit) {
             setFormData({
@@ -32,58 +30,67 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        
         try {
             if (memberToEdit) {
-                // --- EDIT MODE (PUT) ---
                 await api.put(`/members/${memberToEdit.id}`, formData);
             } else {
-                // --- ADD MODE (POST) ---
                 await api.post('/members', formData);
             }
-            // Notify parent to refresh list
             onMemberSaved(); 
         } catch (err) {
-            setError("Error saving member. Please check your input.");
-            console.error(err);
+            setError("Error saving member. Please check inputs.");
         }
     };
 
     return (
-        <div className="container" style={{maxWidth: '600px', marginBottom: '20px', borderLeft: '4px solid #3498db'}}>
-            {/* Dynamic Title */}
+        <div> {/* Removed "container" class */}
             <h2>{memberToEdit ? 'Edit Member' : 'Add New Member'}</h2>
             
-            {error && <p style={{color: 'red'}}>{error}</p>}
+            {error && <p style={{color: 'var(--danger)', marginBottom: '10px'}}>{error}</p>}
             
             <form onSubmit={handleSubmit}>
-                <div style={{marginBottom: '10px'}}>
-                    <div style={{display: 'flex', gap: '10px'}}>
+                <div style={{display: 'flex', gap: '15px', marginBottom: '15px'}}>
+                    <div style={{flex: 1}}>
+                        <label>First Name</label>
                         <input 
-                            type="text" name="first_name" placeholder="First Name" 
+                            type="text" name="first_name" 
                             value={formData.first_name} onChange={handleChange} required 
-                            style={{flex: 1, padding: '8px'}}
-                        />
-                        <input 
-                            type="text" name="last_name" placeholder="Last Name" 
-                            value={formData.last_name} onChange={handleChange} required 
-                            style={{flex: 1, padding: '8px'}}
+                            style={{width: '100%'}}
                         />
                     </div>
-                    <br />
+                    <div style={{flex: 1}}>
+                        <label>Last Name</label>
+                        <input 
+                            type="text" name="last_name" 
+                            value={formData.last_name} onChange={handleChange} required 
+                            style={{width: '100%'}}
+                        />
+                    </div>
+                </div>
+
+                <div style={{marginBottom: '15px'}}>
+                    <label>Email</label>
                     <input 
-                        type="email" name="email" placeholder="Email" 
+                        type="email" name="email" 
                         value={formData.email} onChange={handleChange} required 
-                        style={{width: '100%', padding: '8px', marginBottom: '10px'}}
+                        style={{width: '100%'}}
                     />
+                </div>
+
+                <div style={{marginBottom: '15px'}}>
+                    <label>Phone</label>
                     <input 
-                        type="text" name="phone" placeholder="Phone" 
+                        type="text" name="phone" 
                         value={formData.phone} onChange={handleChange} 
-                        style={{width: '100%', padding: '8px', marginBottom: '10px'}}
+                        style={{width: '100%'}}
                     />
+                </div>
+
+                <div style={{marginBottom: '25px'}}>
+                    <label>Status</label>
                     <select 
                         name="status" value={formData.status} onChange={handleChange}
-                        style={{width: '100%', padding: '8px', marginBottom: '10px'}}
+                        style={{width: '100%'}}
                     >
                         <option value="active">Active</option>
                         <option value="visitor">Visitor</option>
@@ -91,12 +98,14 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
                     </select>
                 </div>
                 
-                <button type="submit" className="btn btn-primary">
-                    {memberToEdit ? 'Update Member' : 'Save Member'}
-                </button>
-                <button type="button" onClick={onCancel} className="btn" style={{marginLeft: '10px', backgroundColor: '#ddd'}}>
-                    Cancel
-                </button>
+                <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
+                    <button type="button" onClick={onCancel} className="btn" style={{background: '#e2e6ea', color: '#4a5568'}}>
+                        Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                        {memberToEdit ? 'Update' : 'Save'}
+                    </button>
+                </div>
             </form>
         </div>
     );
