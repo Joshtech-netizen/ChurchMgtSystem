@@ -1,200 +1,191 @@
-/* 1. Import Poppins Font from Google */
+/* 1. Import Poppins Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* 2. Define our Color Palette */
+/* 2. Color Palette & Global Vars */
 :root {
-  --primary-blue: #0056b3;       /* Main Action Color */
-  --sidebar-blue: #002b59;       /* Darker Navy for Sidebar */
-  --light-blue-bg: #f0f4f8;      /* Page Background */
+  --primary-blue: #0056b3;
+  --sidebar-blue: #002b59;
+  --light-blue-bg: #f4f7f9; /* Slightly cooler grey-blue */
   --white: #ffffff;
-  --text-dark: #333333;
-  --text-light: #777777;
-  --success: #28a745;
-  --danger: #dc3545;
-  --shadow: 0 4px 12px rgba(0, 86, 179, 0.1); /* Subtle Blue Shadow */
+  --text-dark: #2c3e50;
+  --text-light: #596b7d;
+  --border-color: #e1e4e8;
+  --shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-/* 3. Global Reset */
+/* 3. Global Typography */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif; /* Apply Font Globally */
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
   background-color: var(--light-blue-bg);
   color: var(--text-dark);
+  font-size: 0.9rem; /* Standard Web App Size (~14.4px) */
+  line-height: 1.5;
 }
 
-/* 4. Layout & Containers */
-.container {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 30px;
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
-
-h1, h2, h3 {
-  color: var(--sidebar-blue);
-  font-weight: 600;
-}
-
+/* 4. Headings - Reduced sizes */
 h1 {
-  margin-bottom: 25px;
-  border-bottom: 3px solid var(--light-blue-bg);
+  font-size: 1.5rem; /* ~24px */
+  font-weight: 600;
+  color: var(--sidebar-blue);
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eef2f5;
   padding-bottom: 10px;
 }
 
-/* 5. Modern Tables */
+h2 {
+  font-size: 1.25rem; /* ~20px */
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 1rem; /* ~16px */
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* 5. Layout & Containers */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 25px;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+/* 6. Compact Modern Tables */
 .table-wrapper {
   overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--white);
+  font-size: 0.875rem; /* 14px for data */
 }
 
 thead {
-  background-color: var(--primary-blue);
-  color: var(--white);
+  background-color: #f8f9fa; /* Light grey header instead of solid blue */
+  border-bottom: 2px solid var(--border-color);
 }
 
 th {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--sidebar-blue);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.85rem;
-  padding: 15px;
+  font-size: 0.75rem; /* 12px uppercase labels */
+  letter-spacing: 0.05em;
+  padding: 12px 15px;
   text-align: left;
 }
 
 td {
-  padding: 15px;
-  border-bottom: 1px solid #eef2f7;
-  color: #555;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: #4a5568;
 }
 
 tr:hover {
-  background-color: #eef6ff; /* Very light blue hover */
+  background-color: #f8fbff;
 }
 
-/* 6. Buttons */
+/* 7. Buttons - Standard Size */
 .btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  display: inline-block;
+  font-size: 0.875rem; /* 14px */
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-primary {
   background-color: var(--primary-blue);
   color: var(--white);
-  box-shadow: 0 4px 6px rgba(0, 86, 179, 0.2);
 }
 
 .btn-primary:hover {
   background-color: #004494;
-  transform: translateY(-1px);
 }
 
-/* 7. Status Badges */
-.badge {
-  padding: 6px 12px;
-  border-radius: 30px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.active, .present, .tithe { background-color: #d4edda; color: #155724; } /* Green-ish */
-.inactive, .absent { background-color: #f8d7da; color: #721c24; } /* Red-ish */
-.visitor, .offering { background-color: #cce5ff; color: #004085; } /* Blue-ish */
-
-/* 8. Dashboard Cards */
+/* 8. Dashboard Stat Cards */
 .dashboard-grid {
     display: flex;
-    gap: 25px;
+    gap: 20px;
     margin-top: 20px;
     flex-wrap: wrap;
 }
 
 .stat-card {
     flex: 1;
-    min-width: 250px;
-    padding: 25px;
+    min-width: 220px;
+    padding: 20px;
     background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    border-left: 5px solid var(--primary-blue); /* Blue accent line */
-    transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    text-align: left; /* Aligned left looks more professional */
+    position: relative;
+    overflow: hidden;
 }
 
 .stat-card h3 {
-    color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
 }
 
 .stat-card p {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 1.75rem; /* Reduced from 2.5rem */
+    font-weight: 600;
     color: var(--sidebar-blue);
     margin: 0;
 }
-/* Material Icons Helper */
-.material-symbols-outlined {
-  vertical-align: middle;
-  margin-right: 10px;
-  font-size: 1.2rem;
+
+/* 9. Layout Transitions */
+.main-content {
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  padding: 25px; /* More breathing room */
+  background-color: var(--light-blue-bg);
 }
-/* The Hamburger/Menu Button */
+
 .menu-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
+  padding: 5px;
   color: var(--sidebar-blue);
   display: flex;
   align-items: center;
-  transition: transform 0.2s;
 }
 
-.menu-btn:hover {
-  transform: scale(1.1);
-  background-color: rgba(0,0,0,0.05);
-  border-radius: 50%;
+/* 10. Forms */
+input, select {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border 0.2s;
 }
 
-/* Transition for Main Content */
-.main-content {
-  transition: margin-left 0.3s ease;
-  min-height: 100vh;
-  padding: 20px;
-  background-color: var(--light-blue-bg);
-}
-
-/* Mobile/Collapsed styling */
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%); /* Hide sidebar by default on mobile */
-  }
-  .sidebar.open {
-    transform: translateX(0); /* Slide in when open */
-  }
+input:focus, select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
 }
