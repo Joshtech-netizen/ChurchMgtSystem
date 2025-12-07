@@ -7,27 +7,23 @@ const DonationList = () => {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
 
-    // Function to fetch data
     const fetchDonations = async () => {
         try {
             const response = await api.get('/donations');
             setDonations(response.data);
             setLoading(false);
         } catch (error) {
-            console.error("Error fetching donations:", error);
             setLoading(false);
         }
     };
 
-    // Load data on start
     useEffect(() => {
         fetchDonations();
     }, []);
 
-    // Handle successful addition
     const handleSuccess = () => {
-        fetchDonations(); // Refresh table
-        setShowForm(false); // Close form
+        fetchDonations();
+        setShowForm(false);
     };
 
     if (loading) return <div className="container">Loading donations...</div>;
@@ -35,20 +31,22 @@ const DonationList = () => {
     return (
         <div className="container">
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-                <h1>Donations</h1>
-                {!showForm && (
-                    <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-                        + Record Donation
-                    </button>
-                )}
+                <h1>Donations Records</h1>
+                <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+                    + Record Donation
+                </button>
             </div>
 
-            {/* Show Form Logic */}
+            {/* --- MODAL WRAPPER --- */}
             {showForm && (
-                <AddDonation 
-                    onDonationAdded={handleSuccess} 
-                    onCancel={() => setShowForm(false)} 
-                />
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <AddDonation 
+                            onDonationAdded={handleSuccess} 
+                            onCancel={() => setShowForm(false)} 
+                        />
+                    </div>
+                </div>
             )}
 
             <div className="table-wrapper">
@@ -68,17 +66,11 @@ const DonationList = () => {
                                 <tr key={d.id}>
                                     <td>{d.date}</td>
                                     <td><strong>{d.member_name}</strong></td>
-                                    <td>
-                                        <span className="badge" style={{background: '#e0e0e0', color: '#333'}}>
-                                            {d.type}
-                                        </span>
-                                    </td>
-                                    <td style={{fontWeight: 'bold', color: '#27ae60'}}>
+                                    <td><span className="badge">{d.type}</span></td>
+                                    <td style={{fontWeight: 'bold', color: 'var(--success)'}}>
                                         ${d.amount}
                                     </td>
-                                    <td style={{color: '#7f8c8d', fontSize: '0.9em'}}>
-                                        {d.notes}
-                                    </td>
+                                    <td style={{color: '#7f8c8d'}}>{d.notes}</td>
                                 </tr>
                             ))
                         ) : (
