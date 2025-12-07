@@ -189,3 +189,49 @@ input:focus, select:focus {
   border-color: var(--primary-blue);
   box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
 }
+/* --- MODAL POPUP STYLES --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically & horizontally */
+  z-index: 2000; /* Sit on top of everything (even sidebar) */
+  -webkit-backdrop-filter: blur(3px); /* Modern blur effect */
+  backdrop-filter: blur(3px); /* Modern blur effect */
+}
+
+.modal-content {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px; /* Limits width on big screens */
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  position: relative;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Header style inside modal */
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--primary-blue);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
