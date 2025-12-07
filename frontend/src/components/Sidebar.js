@@ -39,10 +39,10 @@ const Sidebar = ({ isOpen }) => {
             color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
             background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
             textDecoration: 'none',
-            padding: '12px 15px',
-            marginBottom: '10px',
+            padding: '10px 15px',
+            marginBottom: '8px',
             borderRadius: '8px',
-            fontSize: '1rem',
+            fontSize: '0.9rem', // Reduced to standard sidebar text size
             fontWeight: '500',
             transition: 'all 0.3s ease',
             borderLeft: isActive ? '4px solid #fff' : '4px solid transparent'
@@ -53,8 +53,8 @@ const Sidebar = ({ isOpen }) => {
         <div style={sidebarStyle} className="sidebar">
             {/* Logo Section */}
             <div style={logoStyle}>
-                <span className="material-symbols-outlined" style={{fontSize: '3rem'}}>church</span>
-                <span style={{fontSize: '1.2rem', fontWeight: '700', letterSpacing: '1px'}}>CHURCH ADMIN</span>
+                <span className="material-symbols-outlined" style={{fontSize: '2.5rem'}}>church</span>
+                <span style={{fontSize: '1rem', fontWeight: '700', letterSpacing: '1px'}}>CHURCH ADMIN</span>
             </div>
 
             {/* Navigation Links */}
