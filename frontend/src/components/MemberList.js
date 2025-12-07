@@ -7,7 +7,7 @@ const MemberList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showForm, setShowForm] = useState(false);
-    const [editingMember, setEditingMember] = useState(null); // Track who we are editing
+    const [editingMember, setEditingMember] = useState(null);
 
     useEffect(() => {
         fetchMembers();
@@ -24,29 +24,26 @@ const MemberList = () => {
         }
     };
 
-    // --- DELETE LOGIC ---
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this member?")) {
+        if (window.confirm("Delete this member?")) {
             try {
                 await api.delete(`/members/${id}`);
-                // Remove from UI immediately (optimistic update)
-                setMembers(members.filter(member => member.id !== id));
+                setMembers(members.filter(m => m.id !== id));
             } catch (err) {
-                alert("Failed to delete member.");
+                alert("Failed to delete.");
             }
         }
     };
 
-    // --- EDIT LOGIC ---
     const handleEdit = (member) => {
-        setEditingMember(member); // Load data into state
-        setShowForm(true);        // Open the form
+        setEditingMember(member);
+        setShowForm(true);
     };
 
     const handleFormSuccess = () => {
-        fetchMembers();      // Refresh list
-        setShowForm(false);  // Close form
-        setEditingMember(null); // Clear editing state
+        fetchMembers();
+        setShowForm(false);
+        setEditingMember(null);
     };
 
     const handleFormCancel = () => {
@@ -60,21 +57,23 @@ const MemberList = () => {
     return (
         <div className="container">
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-                <h1>Church Members</h1>
-                {!showForm && (
-                    <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-                        + Add New Member
-                    </button>
-                )}
+                <h1>Members Directory</h1>
+                <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+                    + Add New Member
+                </button>
             </div>
 
-            {/* Form Component (Handles both Add and Edit) */}
+            {/* --- MODAL WRAPPER --- */}
             {showForm && (
-                <AddMember 
-                    onMemberSaved={handleFormSuccess} 
-                    onCancel={handleFormCancel}
-                    memberToEdit={editingMember} 
-                />
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <AddMember 
+                            onMemberSaved={handleFormSuccess} 
+                            onCancel={handleFormCancel}
+                            memberToEdit={editingMember} 
+                        />
+                    </div>
+                </div>
             )}
             
             <div className="table-wrapper">
@@ -103,25 +102,25 @@ const MemberList = () => {
                                     <td>
                                         <button 
                                             className="btn" 
-                                            style={{backgroundColor: '#f39c12', color: 'white', marginRight: '5px', padding: '5px 10px'}}
+                                            style={{color: '#f39c12', background: 'none', padding: '5px'}}
                                             onClick={() => handleEdit(member)}
+                                            title="Edit"
                                         >
-                                            Edit
+                                            <span className="material-symbols-outlined">edit</span>
                                         </button>
                                         <button 
                                             className="btn" 
-                                            style={{backgroundColor: '#e74c3c', color: 'white', padding: '5px 10px'}}
+                                            style={{color: '#e74c3c', background: 'none', padding: '5px'}}
                                             onClick={() => handleDelete(member.id)}
+                                            title="Delete"
                                         >
-                                            Delete
+                                            <span className="material-symbols-outlined">delete</span>
                                         </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
-                            <tr>
-                                <td colSpan="5" style={{textAlign: 'center'}}>No members found.</td>
-                            </tr>
+                            <tr><td colSpan="5" style={{textAlign: 'center'}}>No members found.</td></tr>
                         )}
                     </tbody>
                 </table>
