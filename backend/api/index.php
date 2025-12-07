@@ -20,6 +20,8 @@ include_once 'controllers/DonationController.php';
 include_once 'models/Attendance.php';
 include_once 'controllers/AttendanceController.php';
 include_once 'controllers/DashboardController.php';
+include_once 'models/User.php'; 
+include_once 'controllers/AuthController.php'; 
 
 // 4. Parse the URL (e.g., localhost/backend/api/members)
 // The .htaccess file will send the path to $_GET['url']
@@ -43,13 +45,18 @@ switch ($resource) {
         break;
         case 'attendance':
         $controller = new AttendanceController($db);
-        // Note: Attendance usually doesn't need an ID in the URL, mostly Date query params
         $controller->processRequest($_SERVER["REQUEST_METHOD"]);
         break;
         case 'dashboard':
         $controller = new DashboardController($db);
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $controller->getStats();
+        }
+        break;
+        case 'login':
+        $auth = new AuthController($db);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $auth->login();
         }
         break;
 
