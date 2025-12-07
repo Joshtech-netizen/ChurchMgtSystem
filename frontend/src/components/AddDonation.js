@@ -2,19 +2,15 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 
 const AddDonation = ({ onDonationAdded, onCancel }) => {
-    // 1. State for the form fields
     const [formData, setFormData] = useState({
         member_id: '',
         amount: '',
         type: 'tithe',
-        date: new Date().toISOString().split('T')[0], // Default to today
+        date: new Date().toISOString().split('T')[0],
         notes: ''
     });
-
-    // 2. State for the "Dropdown" list
     const [members, setMembers] = useState([]);
 
-    // 3. Load Members for the dropdown
     useEffect(() => {
         const fetchMembers = async () => {
             try {
@@ -35,48 +31,44 @@ const AddDonation = ({ onDonationAdded, onCancel }) => {
         e.preventDefault();
         try {
             await api.post('/donations', formData);
-            onDonationAdded(); // Refresh the parent list
+            onDonationAdded();
         } catch (err) {
-            alert("Error recording donation. Did you select a member?");
+            alert("Error recording donation.");
         }
     };
 
     return (
-        <div className="container" style={{maxWidth: '600px', marginBottom: '20px', borderLeft: '4px solid #27ae60'}}>
+        <div>
             <h2>Record Donation</h2>
             <form onSubmit={handleSubmit}>
                 <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px'}}>Member:</label>
+                    <label>Member</label>
                     <select 
                         name="member_id" 
-                        value={formData.member_id} 
-                        onChange={handleChange} 
-                        required
-                        style={{width: '100%', padding: '8px'}}
+                        value={formData.member_id} onChange={handleChange} required
+                        style={{width: '100%'}}
                     >
-                        <option value="">-- Select a Member --</option>
-                        {members.map(member => (
-                            <option key={member.id} value={member.id}>
-                                {member.first_name} {member.last_name}
-                            </option>
+                        <option value="">-- Select Member --</option>
+                        {members.map(m => (
+                            <option key={m.id} value={m.id}>{m.first_name} {m.last_name}</option>
                         ))}
                     </select>
                 </div>
 
-                <div style={{display: 'flex', gap: '10px', marginBottom: '15px'}}>
+                <div style={{display: 'flex', gap: '15px', marginBottom: '15px'}}>
                     <div style={{flex: 1}}>
-                        <label>Amount ($):</label>
+                        <label>Amount ($)</label>
                         <input 
                             type="number" name="amount" step="0.01"
                             value={formData.amount} onChange={handleChange} required 
-                            style={{width: '100%', padding: '8px'}}
+                            style={{width: '100%'}}
                         />
                     </div>
                     <div style={{flex: 1}}>
-                        <label>Type:</label>
+                        <label>Type</label>
                         <select 
                             name="type" value={formData.type} onChange={handleChange}
-                            style={{width: '100%', padding: '8px'}}
+                            style={{width: '100%'}}
                         >
                             <option value="tithe">Tithe</option>
                             <option value="offering">Offering</option>
@@ -87,27 +79,29 @@ const AddDonation = ({ onDonationAdded, onCancel }) => {
                 </div>
 
                 <div style={{marginBottom: '15px'}}>
-                    <label>Date:</label>
+                    <label>Date</label>
                     <input 
                         type="date" name="date" 
                         value={formData.date} onChange={handleChange} required 
-                        style={{width: '100%', padding: '8px'}}
+                        style={{width: '100%'}}
                     />
                 </div>
 
-                <div style={{marginBottom: '15px'}}>
-                    <label>Notes:</label>
+                <div style={{marginBottom: '25px'}}>
+                    <label>Notes</label>
                     <input 
-                        type="text" name="notes" placeholder="Optional notes"
+                        type="text" name="notes" placeholder="Optional"
                         value={formData.notes} onChange={handleChange} 
-                        style={{width: '100%', padding: '8px'}}
+                        style={{width: '100%'}}
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary">Record Donation</button>
-                <button type="button" onClick={onCancel} className="btn" style={{marginLeft: '10px', backgroundColor: '#ddd'}}>
-                    Cancel
-                </button>
+                <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
+                    <button type="button" onClick={onCancel} className="btn" style={{background: '#e2e6ea', color: '#4a5568'}}>
+                        Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary">Record</button>
+                </div>
             </form>
         </div>
     );
