@@ -157,3 +157,44 @@ tr:hover {
     color: var(--sidebar-blue);
     margin: 0;
 }
+/* Material Icons Helper */
+.material-symbols-outlined {
+  vertical-align: middle;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+/* The Hamburger/Menu Button */
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  color: var(--sidebar-blue);
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.menu-btn:hover {
+  transform: scale(1.1);
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 50%;
+}
+
+/* Transition for Main Content */
+.main-content {
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--light-blue-bg);
+}
+
+/* Mobile/Collapsed styling */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default on mobile */
+  }
+  .sidebar.open {
+    transform: translateX(0); /* Slide in when open */
+  }
+}
