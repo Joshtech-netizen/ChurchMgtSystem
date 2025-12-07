@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 const Sidebar = ({ isOpen }) => {
     const location = useLocation();
 
-    // Dynamic Style for Sliding
     const sidebarStyle = {
         width: '260px',
         height: '100vh',
@@ -16,30 +15,27 @@ const Sidebar = ({ isOpen }) => {
         padding: '20px',
         boxShadow: '4px 0 10px rgba(0,0,0,0.1)',
         zIndex: 1000,
-        // The Sliding Magic:
         transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
         transition: 'transform 0.3s ease-in-out'
     };
 
+    // UPDATED: Vertical Stack Layout for Logo
     const logoStyle = {
-        fontSize: '1.5rem',
-        fontWeight: '700',
-        marginBottom: '30px',
-        textAlign: 'center',
-        letterSpacing: '1px',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        paddingBottom: '20px',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column', // Stack items (Icon Top, Text Bottom)
+        alignItems: 'center',    // Center them horizontally
         justifyContent: 'center',
-        gap: '10px'
+        marginBottom: '30px',
+        paddingBottom: '20px',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        gap: '10px'              // Space between Icon and Text
     };
 
     const getLinkStyle = (path) => {
         const isActive = location.pathname === path;
         return {
             display: 'flex',
-            alignItems: 'center', // Aligns icon and text
+            alignItems: 'center',
             color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
             background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
             textDecoration: 'none',
@@ -55,10 +51,13 @@ const Sidebar = ({ isOpen }) => {
 
     return (
         <div style={sidebarStyle} className="sidebar">
+            {/* Logo Section */}
             <div style={logoStyle}>
-                <span className="material-symbols-outlined" style={{fontSize: '2rem'}}>church</span>
-                Church Admin
+                <span className="material-symbols-outlined" style={{fontSize: '3rem'}}>church</span>
+                <span style={{fontSize: '1.2rem', fontWeight: '700', letterSpacing: '1px'}}>CHURCH ADMIN</span>
             </div>
+
+            {/* Navigation Links */}
             <nav>
                 <Link to="/" style={getLinkStyle('/')}>
                     <span className="material-symbols-outlined">dashboard</span>
