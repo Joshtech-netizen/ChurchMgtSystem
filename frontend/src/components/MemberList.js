@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import AddMember from './AddMember';
 
+// URL where images are stored on your server
+const BASE_URL = 'http://localhost/church-system/backend/api/uploads/';
+
 const MemberList = () => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -80,6 +83,7 @@ const MemberList = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>Photo</th> {/* New Column */}
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -91,7 +95,38 @@ const MemberList = () => {
                         {members.length > 0 ? (
                             members.map((member) => (
                                 <tr key={member.id}>
-                                    <td>{member.first_name} {member.last_name}</td>
+                                    {/* PHOTO CELL */}
+                                    <td>
+                                        {member.photo ? (
+                                            <img 
+                                                src={`${BASE_URL}${member.photo}`} 
+                                                alt="Profile" 
+                                                style={{
+                                                    width: '40px', 
+                                                    height: '40px', 
+                                                    borderRadius: '50%', 
+                                                    objectFit: 'cover',
+                                                    border: '2px solid #fff',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                                }}
+                                            />
+                                        ) : (
+                                            <div style={{
+                                                width: '40px', 
+                                                height: '40px', 
+                                                borderRadius: '50%', 
+                                                background: '#e2e8f0', 
+                                                color: '#718096',
+                                                display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center'
+                                            }}>
+                                                <span className="material-symbols-outlined" style={{fontSize: '20px'}}>person</span>
+                                            </div>
+                                        )}
+                                    </td>
+                                    
+                                    <td style={{fontWeight: '500'}}>{member.first_name} {member.last_name}</td>
                                     <td>{member.email}</td>
                                     <td>{member.phone}</td>
                                     <td>
@@ -120,7 +155,7 @@ const MemberList = () => {
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan="5" style={{textAlign: 'center'}}>No members found.</td></tr>
+                            <tr><td colSpan="6" style={{textAlign: 'center'}}>No members found.</td></tr>
                         )}
                     </tbody>
                 </table>
