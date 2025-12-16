@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; // We need to know WHO is logged in
 
 const Sidebar = ({ isOpen }) => {
     const location = useLocation();
+    const { user } = useContext(AuthContext); // Get current user
 
     const sidebarStyle = {
         width: '260px',
@@ -19,62 +21,71 @@ const Sidebar = ({ isOpen }) => {
         transition: 'transform 0.3s ease-in-out'
     };
 
-    // UPDATED: Vertical Stack Layout for Logo
     const logoStyle = {
-        display: 'flex',
-        flexDirection: 'column', // Stack items (Icon Top, Text Bottom)
-        alignItems: 'center',    // Center them horizontally
-        justifyContent: 'center',
-        marginBottom: '30px',
-        paddingBottom: '20px',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        gap: '10px'              // Space between Icon and Text
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        marginBottom: '30px', paddingBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', gap: '10px'
     };
 
     const getLinkStyle = (path) => {
         const isActive = location.pathname === path;
         return {
-            display: 'flex',
-            alignItems: 'center',
+            display: 'flex', alignItems: 'center',
             color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
             background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
-            textDecoration: 'none',
-            padding: '10px 15px',
-            marginBottom: '8px',
-            borderRadius: '8px',
-            fontSize: '0.9rem', // Reduced to standard sidebar text size
-            fontWeight: '500',
-            transition: 'all 0.3s ease',
+            textDecoration: 'none', padding: '10px 15px', marginBottom: '8px',
+            borderRadius: '8px', fontSize: '0.9rem', fontWeight: '500', transition: 'all 0.3s ease',
             borderLeft: isActive ? '4px solid #fff' : '4px solid transparent'
         };
     };
 
+    // --- PERMISSION LOGIC ---
+    // If role is 'admin', they see everything.
+    // If role is in the array, they see the link.
+    const canAccess = (allowedRoles) => {
+        if (!user) return false;
+        if (user.role === 'admin') return true; // Preacher sees all
+        return allowedRoles.includes(user.role);
+    };
+
     return (
         <div style={sidebarStyle} className="sidebar">
-            {/* Logo Section */}
             <div style={logoStyle}>
                 <span className="material-symbols-outlined" style={{fontSize: '2.5rem'}}>church</span>
-                <span style={{fontSize: '1rem', fontWeight: '700', letterSpacing: '1px'}}>CHURCH ADMIN</span>
+                <span style={{fontSize: '1rem', fontWeight: '700', letterSpacing: '1px'}}>
+                    {user?.role === 'admin' ? 'CHURCH ADMIN' : user?.role.toUpperCase() + ' PORTAL'}
+                </span>
             </div>
 
-            {/* Navigation Links */}
             <nav>
+                {/* 1. DASHBOARD - Everyone sees this */}
                 <Link to="/" style={getLinkStyle('/')}>
                     <span className="material-symbols-outlined">dashboard</span>
                     Dashboard
                 </Link>
-                <Link to="/members" style={getLinkStyle('/members')}>
-                    <span className="material-symbols-outlined">group</span>
-                    Members
-                </Link>
-                <Link to="/donations" style={getLinkStyle('/donations')}>
-                    <span className="material-symbols-outlined">payments</span>
-                    Donations
-                </Link>
-                <Link to="/attendance" style={getLinkStyle('/attendance')}>
-                    <span className="material-symbols-outlined">event_available</span>
-                    Attendance
-                </Link>
+
+                {/* 2. MEMBERS - Admin, Evangelism, Youth, Children */}
+                {canAccess(['evangelism', 'youth', 'children']) && (
+                    <Link to="/members" style={getLinkStyle('/members')}>
+                        <span className="material-symbols-outlined">group</span>
+                        Members Directory
+                    </Link>
+                )}
+
+                {/* 3. DONATIONS - Admin, Finance, Building */}
+                {canAccess(['finance', 'building']) && (
+                    <Link to="/donations" style={getLinkStyle('/donations')}>
+                        <span className="material-symbols-outlined">payments</span>
+                        Financial Records
+                    </Link>
+                )}
+
+                {/* 4. ATTENDANCE - Admin, Youth, Children */}
+                {canAccess(['youth', 'children']) && (
+                    <Link to="/attendance" style={getLinkStyle('/attendance')}>
+                        <span className="material-symbols-outlined">event_available</span>
+                        Attendance
+                    </Link>
+                )}
             </nav>
         </div>
     );
