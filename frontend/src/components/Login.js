@@ -54,7 +54,7 @@ const Login = () => {
                             placeholder="••••••"
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{width: '100%', padding: '12px'}}>
+                    <button type="submit" className="btn btn-primary" style={{width: '50%', padding: '12px'}}>
                         Sign In
                     </button>
                 </form>
