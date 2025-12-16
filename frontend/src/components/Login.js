@@ -14,7 +14,7 @@ const Login = () => {
         setError('');
         try {
             await login(email, password);
-            navigate('/'); // Redirect to Dashboard on success
+            navigate('/'); 
         } catch (err) {
             setError(err.message);
         }
@@ -22,42 +22,61 @@ const Login = () => {
 
     return (
         <div style={styles.container}>
-            <div style={styles.card}>
-                <div style={{textAlign: 'center', marginBottom: '30px'}}>
-                    <span className="material-symbols-outlined" style={{fontSize: '4rem', color: 'var(--primary-blue)'}}>church</span>
-                    <h2 style={{marginTop: '10px', color: 'var(--sidebar-blue)'}}>Church Admin</h2>
-                    <p style={{color: 'var(--text-light)'}}>Sign in to manage your church</p>
+            {/* LEFT HALF - Visual Branding */}
+            <div style={styles.leftSide}>
+                <div style={styles.brandContent}>
+                    <span className="material-symbols-outlined" style={{fontSize: '6rem', marginBottom: '20px', textShadow: '0 4px 10px rgba(0,0,0,0.2)'}}>
+                        church
+                    </span>
+                    <h1 style={{color: 'white', fontSize: '2.5rem', margin: '0 0 10px 0'}}>Church Admin</h1>
+                    <p style={{fontSize: '1.1rem', opacity: 0.8, fontWeight: '300'}}>
+                        Manage Members, Donations & Events.
+                    </p>
                 </div>
+            </div>
 
-                {error && <div style={styles.error}>{error}</div>}
-
-                <form onSubmit={handleSubmit}>
-                    <div style={{marginBottom: '20px'}}>
-                        <label style={styles.label}>Email Address</label>
-                        <input 
-                            type="email" 
-                            value={email} 
-                            onChange={(e) => setEmail(e.target.value)}
-                            required 
-                            style={styles.input}
-                            placeholder="admin@church.com"
-                        />
-                    </div>
+            {/* RIGHT HALF - Login Form */}
+            <div style={styles.rightSide}>
+                <div style={styles.formBox}>
                     <div style={{marginBottom: '30px'}}>
-                        <label style={styles.label}>Password</label>
-                        <input 
-                            type="password" 
-                            value={password} 
-                            onChange={(e) => setPassword(e.target.value)}
-                            required 
-                            style={styles.input}
-                            placeholder="••••••"
-                        />
+                        <h2 style={{fontSize: '2rem', color: 'var(--sidebar-blue)', marginBottom: '10px'}}>Welcome Back</h2>
+                        <p style={{color: 'var(--text-light)'}}>Please enter your details to sign in.</p>
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{width: '50%', padding: '12px'}}>
-                        Sign In
-                    </button>
-                </form>
+
+                    {error && <div style={styles.error}>{error}</div>}
+
+                    <form onSubmit={handleSubmit}>
+                        <div style={{marginBottom: '20px'}}>
+                            <label style={styles.label}>Email Address</label>
+                            <input 
+                                type="email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)}
+                                required 
+                                style={styles.input}
+                                placeholder="admin@church.com"
+                            />
+                        </div>
+                        <div style={{marginBottom: '30px'}}>
+                            <label style={styles.label}>Password</label>
+                            <input 
+                                type="password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)}
+                                required 
+                                style={styles.input}
+                                placeholder="••••••"
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary" style={{width: '100%', padding: '15px', fontSize: '1rem'}}>
+                            Sign In
+                        </button>
+                    </form>
+                    
+                    <p style={{marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#888'}}>
+                        Forgot password? Contact your System Admin.
+                    </p>
+                </div>
             </div>
         </div>
     );
@@ -65,41 +84,63 @@ const Login = () => {
 
 const styles = {
     container: {
+        display: 'flex',
         height: '100vh',
+        width: '100vw',
+        overflow: 'hidden', // Prevents scrollbars
+        fontFamily: "'Poppins', sans-serif"
+    },
+    leftSide: {
+        flex: 1, // Takes up 50%
+        background: 'linear-gradient(135deg, var(--sidebar-blue) 0%, var(--primary-blue) 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--light-blue-bg)'
+        color: 'white',
+        position: 'relative'
     },
-    card: {
-        background: 'white',
+    brandContent: {
+        textAlign: 'center',
         padding: '40px',
-        borderRadius: '12px',
-        boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+        maxWidth: '500px'
+    },
+    rightSide: {
+        flex: 1, // Takes up 50%
+        background: 'var(--white)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px'
+    },
+    formBox: {
         width: '100%',
-        maxWidth: '400px'
+        maxWidth: '450px'
     },
     label: {
         display: 'block',
         marginBottom: '8px',
         fontWeight: '500',
-        color: 'var(--text-dark)'
+        color: 'var(--text-dark)',
+        fontSize: '0.9rem'
     },
     input: {
         width: '100%',
-        padding: '12px',
+        padding: '12px 15px',
         borderRadius: '6px',
-        border: '1px solid var(--border-color)',
-        fontSize: '1rem'
+        border: '1px solid #ddd',
+        fontSize: '1rem',
+        backgroundColor: '#f9f9f9',
+        outline: 'none',
+        transition: 'border 0.3s'
     },
     error: {
         background: '#ffebee',
         color: '#c62828',
-        padding: '10px',
-        borderRadius: '4px',
+        padding: '12px',
+        borderRadius: '6px',
         marginBottom: '20px',
-        textAlign: 'center',
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        borderLeft: '4px solid #c62828'
     }
 };
 
