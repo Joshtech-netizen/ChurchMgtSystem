@@ -9,6 +9,7 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
         phone: '',
         status: 'active'
     });
+    const [photo, setPhoto] = useState(null); // State for the file
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -27,23 +28,58 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // New: Handle File Selection
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate Size (1MB = 1048576 Bytes)
+            if (file.size > 1048576) {
+                setError("File is too large! Max size is 1MB.");
+                setPhoto(null);
+                e.target.value = null; // Clear the input
+                return;
+            }
+            setPhoto(file);
+            setError("");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        
         try {
+            // 1. Create FormData object (Required for sending files)
+            const data = new FormData();
+            data.append('first_name', formData.first_name);
+            data.append('last_name', formData.last_name);
+            data.append('email', formData.email);
+            data.append('phone', formData.phone);
+            data.append('status', formData.status);
+            
+            // Only append photo if user selected one
+            if (photo) {
+                data.append('photo', photo);
+            }
+
             if (memberToEdit) {
-                await api.put(`/members/${memberToEdit.id}`, formData);
+                // UPDATE (PUT) - Note: Some backends may require special handling for PUT with FormData
+                await api.put(`/members/${memberToEdit.id}`, formData); 
             } else {
-                await api.post('/members', formData);
+                // CREATE (POST) handles FormData perfectly
+                await api.post('/members', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             }
             onMemberSaved(); 
         } catch (err) {
-            setError("Error saving member. Please check inputs.");
+            console.error(err);
+            setError(err.response?.data?.message || "Error saving member. Please check inputs.");
         }
     };
 
     return (
-        <div> {/* Removed "container" class */}
+        <div> 
             <h2>{memberToEdit ? 'Edit Member' : 'Add New Member'}</h2>
             
             {error && <p style={{color: 'var(--danger)', marginBottom: '10px'}}>{error}</p>}
@@ -85,6 +121,20 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
                         style={{width: '100%'}}
                     />
                 </div>
+
+                {/* Only show File Upload on Create (for simplicity) */}
+                {!memberToEdit && (
+                    <div style={{marginBottom: '15px'}}>
+                        <label>Profile Photo (Max 1MB)</label>
+                        <input 
+                            type="file" 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            style={{width: '100%', padding: '5px', border: '1px solid var(--border-color)', borderRadius: '4px'}}
+                        />
+                        <small style={{color: '#888'}}>Accepted: JPG, PNG, GIF</small>
+                    </div>
+                )}
 
                 <div style={{marginBottom: '25px'}}>
                     <label>Status</label>
