@@ -25,6 +25,7 @@ class AuthController {
                     $token_data = [
                         'user_id' => $this->user->id,
                         'email' => $this->user->email,
+                        'role' => $this->user->role,
                         'exp' => time() + (60 * 60 * 24) // Expire in 24 hours
                     ];
                     
@@ -36,7 +37,8 @@ class AuthController {
                         "token" => $token,
                         "user" => [
                             "first_name" => $this->user->first_name,
-                            "last_name" => $this->user->last_name
+                            "last_name" => $this->user->last_name,
+                            "role" => $this->user->role
                         ]
                     ]);
                 } else {
