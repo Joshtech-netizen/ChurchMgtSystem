@@ -16,17 +16,38 @@ class Donation {
         $this->conn = $db;
     }
 
-    // READ (with Member Name)
-    public function read() {
-        // We select all donation columns + the member's name
+    // READ (with Date Filters)
+    public function read($start_date = null, $end_date = null) {
+        // Start with basic query
         $query = "SELECT 
                     d.id, d.member_id, d.amount, d.type, d.donation_date, d.notes,
                     m.first_name, m.last_name
                   FROM " . $this->table . " d
                   LEFT JOIN members m ON d.member_id = m.id
-                  ORDER BY d.donation_date DESC";
+                  WHERE 1=1"; // 'WHERE 1=1' allows us to easily append more conditions
+
+        // If Start Date is provided
+        if ($start_date) {
+            $query .= " AND d.donation_date >= :start_date";
+        }
+
+        // If End Date is provided
+        if ($end_date) {
+            $query .= " AND d.donation_date <= :end_date";
+        }
+
+        $query .= " ORDER BY d.donation_date DESC";
         
         $stmt = $this->conn->prepare($query);
+
+        // Bind params if they exist
+        if ($start_date) {
+            $stmt->bindParam(':start_date', $start_date);
+        }
+        if ($end_date) {
+            $stmt->bindParam(':end_date', $end_date);
+        }
+
         $stmt->execute();
         return $stmt;
     }
