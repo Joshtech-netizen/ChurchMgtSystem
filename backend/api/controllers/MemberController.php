@@ -26,9 +26,69 @@ class MemberController {
                 break;
 
             case 'POST':
-                $data = json_decode(file_get_contents("php://input"));
+                // 1. Check if this is a File Upload (Form Data) or JSON
+                $data = null;
+                $photoName = null;
+
+                if (!empty($_FILES)) {
+                    // --- HANDLE FILE UPLOAD ---
+                    // a. Validate Data from $_POST (because FormData puts text in $_POST)
+                    $data = (object) $_POST;
+                    
+                    // b. Validate Image
+                    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                        $fileTmpPath = $_FILES['photo']['tmp_name'];
+                        $fileName = $_FILES['photo']['name'];
+                        $fileSize = $_FILES['photo']['size'];
+                        $fileNameCmps = explode(".", $fileName);
+                        $fileExtension = strtolower(end($fileNameCmps));
+
+                        // ALLOWED EXTENSIONS
+                        $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+
+                        // 1MB LIMIT (1048576 bytes)
+                        if ($fileSize > 1048576) {
+                            http_response_code(400);
+                            echo json_encode(["message" => "File too large. Max 1MB."]);
+                            return;
+                        }
+
+                        if (in_array($fileExtension, $allowedfileExtensions)) {
+                            // Generate unique name to prevent overwriting
+                            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                            $uploadFileDir = __DIR__ . '/../uploads/';
+                            
+                            // Create directory if it doesn't exist
+                            if (!is_dir($uploadFileDir)) {
+                                mkdir($uploadFileDir, 0755, true);
+                            }
+
+                            $dest_path = $uploadFileDir . $newFileName;
+
+                            if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                                $photoName = $newFileName;
+                            } else {
+                                http_response_code(500);
+                                echo json_encode(["message" => "Error moving file to upload folder."]);
+                                return;
+                            }
+                        } else {
+                            http_response_code(400);
+                            echo json_encode(["message" => "Invalid file type. Only JPG, PNG, GIF allowed."]);
+                            return;
+                        }
+                    }
+                } else {
+                    // Standard JSON Request (No file)
+                    $data = json_decode(file_get_contents("php://input"));
+                }
+
+                // 2. Save to Database
                 if($this->validate($data)) {
                     $this->fillModel($data);
+                    // Add the photo name to the model
+                    $this->member->photo = $photoName;
+
                     if($this->member->create()) {
                         http_response_code(201);
                         echo json_encode(["message" => "Member created."]);
@@ -93,7 +153,7 @@ class MemberController {
                 http_response_code(405); break;
         }
     }
-
+    
     private function validate($data) {
         return !empty($data->first_name) && !empty($data->last_name) && !empty($data->email);
     }
