@@ -19,11 +19,15 @@ class DonationController {
     }
 
     private function getAll() {
-        $stmt = $this->donation->read();
+        // 1. Get query params from URL (e.g., ?start=2023-01-01&end=2023-01-31)
+        $start_date = isset($_GET['start']) ? $_GET['start'] : null;
+        $end_date = isset($_GET['end']) ? $_GET['end'] : null;
+
+        // 2. Pass them to the model
+        $stmt = $this->donation->read($start_date, $end_date);
         $donations = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // We restructure the data slightly to make it easy for React
             $item = array(
                 'id' => $row['id'],
                 'amount' => $row['amount'],
@@ -36,7 +40,7 @@ class DonationController {
         }
         echo json_encode($donations);
     }
-
+    
     private function create() {
         $data = json_decode(file_get_contents("php://input"));
 
