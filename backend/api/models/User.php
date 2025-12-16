@@ -13,8 +13,11 @@ class User {
         $this->conn = $db;
     }
 
+    public $role; // Add property
+
     public function emailExists() {
-        $query = "SELECT id, first_name, last_name, password 
+        // Added 'role' to the SELECT list
+        $query = "SELECT id, first_name, last_name, password, role
                   FROM " . $this->table . " 
                   WHERE email = ? LIMIT 1";
 
@@ -28,6 +31,7 @@ class User {
             $this->first_name = $row['first_name'];
             $this->last_name = $row['last_name'];
             $this->password = $row['password'];
+            $this->role = $row['role']; // Store the role
             return true;
         }
         return false;
