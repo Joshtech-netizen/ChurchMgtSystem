@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -22,7 +22,6 @@ const Login = () => {
 
     return (
         <div style={styles.container}>
-            {/* LEFT HALF - Visual Branding */}
             <div style={styles.leftSide}>
                 <div style={styles.brandContent}>
                     <span className="material-symbols-outlined" style={{fontSize: '6rem', marginBottom: '20px', textShadow: '0 4px 10px rgba(0,0,0,0.2)'}}>
@@ -35,7 +34,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* RIGHT HALF - Login Form */}
             <div style={styles.rightSide}>
                 <div style={styles.formBox}>
                     <div style={{marginBottom: '30px'}}>
@@ -73,8 +71,8 @@ const Login = () => {
                         </button>
                     </form>
                     
-                    <p style={{marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#888'}}>
-                        Forgot password? Contact your System Admin.
+                    <p style={{marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#666'}}>
+                        Don't have an account? <Link to="/register" style={{color: 'var(--primary-blue)', fontWeight: '600', textDecoration: 'none'}}>Register here</Link>
                     </p>
                 </div>
             </div>
@@ -83,65 +81,14 @@ const Login = () => {
 };
 
 const styles = {
-    container: {
-        display: 'flex',
-        height: '100vh',
-        width: '100vw',
-        overflow: 'hidden', // Prevents scrollbars
-        fontFamily: "'Poppins', sans-serif"
-    },
-    leftSide: {
-        flex: 1, // Takes up 50%
-        background: 'linear-gradient(135deg, var(--sidebar-blue) 0%, var(--primary-blue) 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        position: 'relative'
-    },
-    brandContent: {
-        textAlign: 'center',
-        padding: '40px',
-        maxWidth: '500px'
-    },
-    rightSide: {
-        flex: 1, // Takes up 50%
-        background: 'var(--white)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px'
-    },
-    formBox: {
-        width: '100%',
-        maxWidth: '450px'
-    },
-    label: {
-        display: 'block',
-        marginBottom: '8px',
-        fontWeight: '500',
-        color: 'var(--text-dark)',
-        fontSize: '0.9rem'
-    },
-    input: {
-        width: '100%',
-        padding: '12px 15px',
-        borderRadius: '6px',
-        border: '1px solid #ddd',
-        fontSize: '1rem',
-        backgroundColor: '#f9f9f9',
-        outline: 'none',
-        transition: 'border 0.3s'
-    },
-    error: {
-        background: '#ffebee',
-        color: '#c62828',
-        padding: '12px',
-        borderRadius: '6px',
-        marginBottom: '20px',
-        fontSize: '0.9rem',
-        borderLeft: '4px solid #c62828'
-    }
+    container: { display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', fontFamily: "'Poppins', sans-serif" },
+    leftSide: { flex: 1, background: 'linear-gradient(135deg, var(--sidebar-blue) 0%, var(--primary-blue) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' },
+    brandContent: { textAlign: 'center', padding: '40px', maxWidth: '500px' },
+    rightSide: { flex: 1, background: 'var(--white)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' },
+    formBox: { width: '100%', maxWidth: '450px' },
+    label: { display: 'block', marginBottom: '8px', fontWeight: '500', color: 'var(--text-dark)', fontSize: '0.9rem' },
+    input: { width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '1rem', backgroundColor: '#f9f9f9', outline: 'none' },
+    error: { background: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '0.9rem', borderLeft: '4px solid #c62828' }
 };
 
 export default Login;
