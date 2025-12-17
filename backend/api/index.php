@@ -21,6 +21,8 @@ if (file_exists('controllers/AttendanceController.php')) include_once 'controlle
 if (file_exists('controllers/DashboardController.php')) include_once 'controllers/DashboardController.php';
 if (file_exists('models/User.php')) include_once 'models/User.php';
 if (file_exists('controllers/AuthController.php')) include_once 'controllers/AuthController.php';
+if (file_exists('models/Event.php')) include_once 'models/Event.php';
+if (file_exists('controllers/EventController.php')) include_once 'controllers/EventController.php';
 
 // 3. Parse URL
 $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';
@@ -57,6 +59,10 @@ switch ($resource) {
     case 'register': // NEW ROUTE
         $auth = new AuthController($db);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') $auth->register();
+        break;
+    case 'events':
+        $controller = new EventController($db);
+        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
     default:
         http_response_code(404);
