@@ -58,14 +58,21 @@ class AuthController {
             !empty($data->first_name) &&
             !empty($data->last_name) &&
             !empty($data->email) &&
-            !empty($data->password)
+            !empty($data->password) &&
+            !empty($data->role) // Check for role
         ){
             $this->user->first_name = $data->first_name;
             $this->user->last_name = $data->last_name;
             $this->user->email = $data->email;
             $this->user->password = $data->password;
-            // Default role is 'admin' for now, or you could make this 'finance', 'youth' via dropdown
-            $this->user->role = 'admin'; 
+            
+            // Validate Role to ensure it matches DB Enum
+            $allowed_roles = ['admin', 'finance', 'building', 'evangelism', 'youth', 'children'];
+            if (in_array($data->role, $allowed_roles)) {
+                $this->user->role = $data->role;
+            } else {
+                $this->user->role = 'youth'; // Default fallback if invalid
+            }
 
             if($this->user->emailExists()){
                 http_response_code(400);
