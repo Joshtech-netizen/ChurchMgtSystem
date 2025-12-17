@@ -28,21 +28,21 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // New Register Function
-    const register = async (firstName, lastName, email, password) => {
+    // Register Function
+    const register = async (firstName, lastName, email, password, role) => {
         try {
             await api.post('/register', { 
                 first_name: firstName, 
                 last_name: lastName, 
                 email, 
-                password 
+                password,
+                role // Send role to backend
             });
             return true;
         } catch (error) {
             throw new Error(error.response?.data?.message || "Registration failed");
         }
     };
-
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
