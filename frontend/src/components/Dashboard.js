@@ -5,7 +5,8 @@ const Dashboard = () => {
     const [stats, setStats] = useState({
         total_members: 0,
         monthly_donations: 0,
-        attendance_today: 0
+        attendance_today: 0,
+        upcoming_events: 0 // Initialize to 0
     });
 
     useEffect(() => {
@@ -44,6 +45,14 @@ const Dashboard = () => {
                     <h3>Attendance (Today)</h3>
                     <p style={{color: '#e67e22'}}>
                         {stats.attendance_today}
+                    </p>
+                </div>
+
+                {/* Events Card */}
+                <div className="stat-card">
+                    <h3>Upcoming Events</h3>
+                    <p style={{color: 'var(--primary-blue)'}}>
+                        {stats.upcoming_events}
                     </p>
                 </div>
             </div>
