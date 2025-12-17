@@ -7,35 +7,42 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 1. Check if user is already logged in (on page refresh)
     useEffect(() => {
         const token = localStorage.getItem('token');
         const userData = localStorage.getItem('user');
-        
         if (token && userData) {
             setUser(JSON.parse(userData));
         }
         setLoading(false);
     }, []);
 
-    // 2. Login Function
     const login = async (email, password) => {
         try {
             const response = await api.post('/login', { email, password });
-            
-            // Save Token & User to LocalStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
-            
             setUser(response.data.user);
             return true;
         } catch (error) {
-            console.error("Login failed", error);
             throw new Error(error.response?.data?.message || "Login failed");
         }
     };
 
-    // 3. Logout Function
+    // New Register Function
+    const register = async (firstName, lastName, email, password) => {
+        try {
+            await api.post('/register', { 
+                first_name: firstName, 
+                last_name: lastName, 
+                email, 
+                password 
+            });
+            return true;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || "Registration failed");
+        }
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -43,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );
