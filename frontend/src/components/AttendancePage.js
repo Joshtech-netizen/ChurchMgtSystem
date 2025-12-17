@@ -2,71 +2,104 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 
 const AttendancePage = () => {
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [events, setEvents] = useState([]); // List of events
+    const [selectedEventId, setSelectedEventId] = useState(''); // Which event we are checking
+    
     const [members, setMembers] = useState([]);
     const [attendanceRecords, setAttendanceRecords] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    // Load data whenever the date changes
+    // 1. Load Events on Start
     useEffect(() => {
-        loadData();
-    }, [selectedDate]);
+        const fetchEvents = async () => {
+            try {
+                const res = await api.get('/events');
+                setEvents(res.data);
+            } catch (err) {
+                console.error("Failed to load events");
+            }
+        };
+        fetchEvents();
+        // Also load members once
+        const fetchMembers = async () => {
+            const res = await api.get('/members');
+            setMembers(res.data);
+        };
+        fetchMembers();
+    }, []);
 
-    const loadData = async () => {
+    // 2. When Event Changes, Load Attendance
+    useEffect(() => {
+        if (selectedEventId) {
+            loadAttendance(selectedEventId);
+        } else {
+            setAttendanceRecords([]);
+        }
+    }, [selectedEventId]);
+
+    const loadAttendance = async (eventId) => {
         setLoading(true);
         try {
-            // 1. Get All Members
-            const membersRes = await api.get('/members');
-            // 2. Get Attendance for selected date
-            const attendanceRes = await api.get(`/attendance?date=${selectedDate}`);
-            
-            setMembers(membersRes.data);
-            setAttendanceRecords(attendanceRes.data);
-            setLoading(false);
+            const res = await api.get(`/attendance?event_id=${eventId}`);
+            setAttendanceRecords(res.data);
         } catch (err) {
             console.error(err);
+        } finally {
             setLoading(false);
         }
     };
 
     const handleCheckIn = async (memberId) => {
+        if (!selectedEventId) return alert("Please select an event first!");
         try {
             await api.post('/attendance', {
                 member_id: memberId,
-                date: selectedDate,
+                event_id: selectedEventId,
                 status: 'present'
             });
-            // Refresh data to show the green checkmark
-            loadData();
+            loadAttendance(selectedEventId); // Refresh list
         } catch (err) {
             alert("Check-in failed");
         }
     };
 
-    // Helper to check if a specific member ID is in the attendance list
     const isPresent = (memberId) => {
         return attendanceRecords.some(record => record.member_id === memberId);
     };
 
     return (
         <div className="container">
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+            <div style={{marginBottom: '20px'}}>
                 <h1>Attendance Check-in</h1>
-                <input 
-                    type="date" 
-                    value={selectedDate} 
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    style={{padding: '10px', fontSize: '1em', borderRadius: '5px', border: '1px solid #ccc'}}
-                />
+                
+                <label style={{display: 'block', marginBottom: '8px', color: '#666'}}>Select Event to Take Attendance For:</label>
+                <select 
+                    value={selectedEventId} 
+                    onChange={(e) => setSelectedEventId(e.target.value)}
+                    style={{width: '100%', maxWidth: '400px', padding: '10px', fontSize: '1rem'}}
+                >
+                    <option value="">-- Choose an Event --</option>
+                    {events.map(event => (
+                        <option key={event.id} value={event.id}>
+                            {event.title} ({new Date(event.event_date).toLocaleDateString()})
+                        </option>
+                    ))}
+                </select>
             </div>
 
-            {loading ? <p>Loading...</p> : (
+            {/* Only show list if event is selected */}
+            {!selectedEventId ? (
+                <div style={{textAlign: 'center', padding: '40px', color: '#888', background: '#f9f9f9', borderRadius: '8px'}}>
+                    Please select an event from the dropdown above to start taking attendance.
+                </div>
+            ) : (
                 <div className="table-wrapper">
+                    {loading && <p style={{padding: '10px'}}>Loading records...</p>}
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Status for {selectedDate}</th>
+                                <th>Member Name</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -75,7 +108,7 @@ const AttendancePage = () => {
                                 const attended = isPresent(member.id);
                                 return (
                                     <tr key={member.id} style={{background: attended ? '#f0f9eb' : 'white'}}>
-                                        <td>{member.first_name} {member.last_name}</td>
+                                        <td style={{fontWeight: '500'}}>{member.first_name} {member.last_name}</td>
                                         <td>
                                             {attended ? (
                                                 <span className="badge active">✅ Present</span>
