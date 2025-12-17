@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import AddMember from './AddMember';
+import MemberDetails from './MemberDetails'; // Import the new component
 
-// URL where images are stored on your server
 const BASE_URL = 'http://localhost/church-system/backend/api/uploads/';
 
 const MemberList = () => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
+    // State for Modals
     const [showForm, setShowForm] = useState(false);
     const [editingMember, setEditingMember] = useState(null);
+    const [viewingMember, setViewingMember] = useState(null); // New state for View Mode
 
     useEffect(() => {
         fetchMembers();
@@ -43,6 +46,11 @@ const MemberList = () => {
         setShowForm(true);
     };
 
+    // New: Handle View Click
+    const handleView = (member) => {
+        setViewingMember(member);
+    };
+
     const handleFormSuccess = () => {
         fetchMembers();
         setShowForm(false);
@@ -66,7 +74,7 @@ const MemberList = () => {
                 </button>
             </div>
 
-            {/* --- MODAL WRAPPER --- */}
+            {/* --- ADD/EDIT MODAL --- */}
             {showForm && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -78,12 +86,24 @@ const MemberList = () => {
                     </div>
                 </div>
             )}
+
+            {/* --- VIEW DETAILS MODAL --- */}
+            {viewingMember && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{maxWidth: '400px'}}>
+                        <MemberDetails 
+                            member={viewingMember} 
+                            onClose={() => setViewingMember(null)} 
+                        />
+                    </div>
+                </div>
+            )}
             
             <div className="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>Photo</th> {/* New Column */}
+                            <th>Photo</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -95,46 +115,35 @@ const MemberList = () => {
                         {members.length > 0 ? (
                             members.map((member) => (
                                 <tr key={member.id}>
-                                    {/* PHOTO CELL */}
                                     <td>
                                         {member.photo ? (
                                             <img 
                                                 src={`${BASE_URL}${member.photo}`} 
                                                 alt="Profile" 
-                                                style={{
-                                                    width: '40px', 
-                                                    height: '40px', 
-                                                    borderRadius: '50%', 
-                                                    objectFit: 'cover',
-                                                    border: '2px solid #fff',
-                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                                }}
+                                                style={{width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover'}}
                                             />
                                         ) : (
-                                            <div style={{
-                                                width: '40px', 
-                                                height: '40px', 
-                                                borderRadius: '50%', 
-                                                background: '#e2e8f0', 
-                                                color: '#718096',
-                                                display: 'flex', 
-                                                alignItems: 'center', 
-                                                justifyContent: 'center'
-                                            }}>
-                                                <span className="material-symbols-outlined" style={{fontSize: '20px'}}>person</span>
+                                            <div style={{width: '40px', height: '40px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                <span className="material-symbols-outlined" style={{fontSize: '20px', color: '#718096'}}>person</span>
                                             </div>
                                         )}
                                     </td>
-                                    
                                     <td style={{fontWeight: '500'}}>{member.first_name} {member.last_name}</td>
                                     <td>{member.email}</td>
                                     <td>{member.phone}</td>
+                                    <td><span className={`badge ${member.status}`}>{member.status}</span></td>
                                     <td>
-                                        <span className={`badge ${member.status}`}>
-                                            {member.status}
-                                        </span>
-                                    </td>
-                                    <td>
+                                        {/* VIEW BUTTON */}
+                                        <button 
+                                            className="btn" 
+                                            style={{color: '#3498db', background: 'none', padding: '5px'}}
+                                            onClick={() => handleView(member)}
+                                            title="View Details"
+                                        >
+                                            <span className="material-symbols-outlined">visibility</span>
+                                        </button>
+
+                                        {/* EDIT BUTTON */}
                                         <button 
                                             className="btn" 
                                             style={{color: '#f39c12', background: 'none', padding: '5px'}}
@@ -143,6 +152,8 @@ const MemberList = () => {
                                         >
                                             <span className="material-symbols-outlined">edit</span>
                                         </button>
+
+                                        {/* DELETE BUTTON */}
                                         <button 
                                             className="btn" 
                                             style={{color: '#e74c3c', background: 'none', padding: '5px'}}
