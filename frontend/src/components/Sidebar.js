@@ -86,6 +86,13 @@ const Sidebar = ({ isOpen }) => {
                         Attendance
                     </Link>
                 )}
+                {/* 5. EVENTS - Admin, Evangelism */}
+                {canAccess(['evangelism']) && (
+                    <Link to="/events" style={getLinkStyle('/events')}>
+                        <span className="material-symbols-outlined">calendar_month</span>
+                        Events
+                    </Link>
+                )}  
             </nav>
         </div>
     );
