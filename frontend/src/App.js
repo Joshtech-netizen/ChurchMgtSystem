@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import MemberList from './components/MemberList';
 import DonationList from './components/DonationList';
 import AttendancePage from './components/AttendancePage';
+import EventList from './components/EventList';
 import './App.css';
 
 const AppLayout = () => {
@@ -61,6 +62,7 @@ const AppLayout = () => {
                  <Route path="/members" element={<MemberList />} />
                  <Route path="/donations" element={<DonationList />} />
                  <Route path="/attendance" element={<AttendancePage />} />
+                 <Route path="/events" element={<EventList />} />
                  <Route path="*" element={<Navigate to="/" />} />
                </Routes>
             </div>
