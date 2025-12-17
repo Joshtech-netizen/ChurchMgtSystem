@@ -7,7 +7,8 @@ const Register = () => {
         first_name: '',
         last_name: '',
         email: '',
-        password: ''
+        password: '',
+        role: 'admin' // Default role set to 'admin'
     });
     const [error, setError] = useState('');
     const { register } = useContext(AuthContext);
@@ -21,7 +22,7 @@ const Register = () => {
         e.preventDefault();
         setError('');
         try {
-            await register(formData.first_name, formData.last_name, formData.email, formData.password);
+            await register(formData.first_name, formData.last_name, formData.email, formData.password, formData.role);
             alert("Registration successful! Please login.");
             navigate('/login');
         } catch (err) {
@@ -79,6 +80,23 @@ const Register = () => {
                                 value={formData.email} onChange={handleChange}
                                 style={styles.input} placeholder="john@church.com"
                             />
+                        </div>
+
+                        <div style={{marginBottom: '20px'}}>
+                            <label style={styles.label}>Committee / Role</label>
+                            <select 
+                                name="role" 
+                                value={formData.role} 
+                                onChange={handleChange} 
+                                style={styles.input}
+                            >
+                                <option value="youth">Youth Committee</option>
+                                <option value="children">Children's Ministry</option>
+                                <option value="finance">Finance Committee</option>
+                                <option value="building">Building Committee</option>
+                                <option value="evangelism">Evangelism Team</option>
+                                <option value="admin">System Admin (Preacher)</option>
+                            </select>
                         </div>
 
                         <div style={{marginBottom: '30px'}}>
