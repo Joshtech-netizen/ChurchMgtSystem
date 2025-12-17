@@ -16,7 +16,7 @@ class MemberController {
         }
     }
 
-    // Handle /members (GET ALL, POST)
+    // Handle /members (GET ALL, POST Create)
     private function processCollectionRequest($method) {
         switch ($method) {
             case 'GET':
@@ -26,68 +26,11 @@ class MemberController {
                 break;
 
             case 'POST':
-                // 1. Check if this is a File Upload (Form Data) or JSON
-                $data = null;
-                $photoName = null;
-
-                if (!empty($_FILES)) {
-                    // --- HANDLE FILE UPLOAD ---
-                    // a. Validate Data from $_POST (because FormData puts text in $_POST)
-                    $data = (object) $_POST;
-                    
-                    // b. Validate Image
-                    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-                        $fileTmpPath = $_FILES['photo']['tmp_name'];
-                        $fileName = $_FILES['photo']['name'];
-                        $fileSize = $_FILES['photo']['size'];
-                        $fileNameCmps = explode(".", $fileName);
-                        $fileExtension = strtolower(end($fileNameCmps));
-
-                        // ALLOWED EXTENSIONS
-                        $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
-
-                        // 1MB LIMIT (1048576 bytes)
-                        if ($fileSize > 1048576) {
-                            http_response_code(400);
-                            echo json_encode(["message" => "File too large. Max 1MB."]);
-                            return;
-                        }
-
-                        if (in_array($fileExtension, $allowedfileExtensions)) {
-                            // Generate unique name to prevent overwriting
-                            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-                            $uploadFileDir = __DIR__ . '/../uploads/';
-                            
-                            // Create directory if it doesn't exist
-                            if (!is_dir($uploadFileDir)) {
-                                mkdir($uploadFileDir, 0755, true);
-                            }
-
-                            $dest_path = $uploadFileDir . $newFileName;
-
-                            if(move_uploaded_file($fileTmpPath, $dest_path)) {
-                                $photoName = $newFileName;
-                            } else {
-                                http_response_code(500);
-                                echo json_encode(["message" => "Error moving file to upload folder."]);
-                                return;
-                            }
-                        } else {
-                            http_response_code(400);
-                            echo json_encode(["message" => "Invalid file type. Only JPG, PNG, GIF allowed."]);
-                            return;
-                        }
-                    }
-                } else {
-                    // Standard JSON Request (No file)
-                    $data = json_decode(file_get_contents("php://input"));
-                }
-
-                // 2. Save to Database
-                if($this->validate($data)) {
+                $data = (object) $_POST; // Use $_POST for FormData
+                if ($this->validate($data)) {
                     $this->fillModel($data);
-                    // Add the photo name to the model
-                    $this->member->photo = $photoName;
+                    // Handle File Upload
+                    $this->member->photo = $this->handleFileUpload();
 
                     if($this->member->create()) {
                         http_response_code(201);
@@ -97,17 +40,14 @@ class MemberController {
                         echo json_encode(["message" => "Unable to create member."]);
                     }
                 } else {
-                    http_response_code(400);
-                    echo json_encode(["message" => "Incomplete data."]);
+                    $this->sendBadRequest();
                 }
                 break;
-
-            default:
-                http_response_code(405); break;
+            default: http_response_code(405); break;
         }
     }
 
-    // Handle /members/{id} (GET ONE, PUT, DELETE)
+    // Handle /members/{id} (GET One, POST Update, DELETE)
     private function processResourceRequest($method, $id) {
         $this->member->id = $id;
         
@@ -124,10 +64,21 @@ class MemberController {
                 echo json_encode($row);
                 break;
 
-            case 'PUT': // Update
-                $data = json_decode(file_get_contents("php://input"));
-                if($this->validate($data)) {
+            // USE POST FOR UPDATES WITH FILES (Trick to bypass PUT limitations)
+            case 'POST': 
+            case 'PUT':
+                // Check if it's FormData (POST) or Raw JSON (PUT)
+                $data = !empty($_POST) ? (object) $_POST : json_decode(file_get_contents("php://input"));
+                
+                if ($this->validate($data)) {
                     $this->fillModel($data);
+                    
+                    // Handle File Upload (Returns filename or null)
+                    $newPhoto = $this->handleFileUpload();
+                    if ($newPhoto) {
+                        $this->member->photo = $newPhoto;
+                    }
+
                     if($this->member->update()) {
                         echo json_encode(["message" => "Member updated."]);
                     } else {
@@ -135,23 +86,50 @@ class MemberController {
                         echo json_encode(["message" => "Unable to update member."]);
                     }
                 } else {
-                    http_response_code(400);
-                    echo json_encode(["message" => "Incomplete data."]);
+                    $this->sendBadRequest();
                 }
                 break;
 
-            case 'DELETE': // Delete
+            case 'DELETE':
                 if($this->member->delete()) {
                     echo json_encode(["message" => "Member deleted."]);
                 } else {
                     http_response_code(503);
-                    echo json_encode(["message" => "Unable to delete member."]);
+                    echo json_encode(["message" => "Unable to delete."]);
                 }
                 break;
-
-            default:
-                http_response_code(405); break;
+            default: http_response_code(405); break;
         }
+    }
+
+    // --- HELPER FUNCTIONS ---
+
+    private function handleFileUpload() {
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['photo']['tmp_name'];
+            $fileName = $_FILES['photo']['name'];
+            $fileSize = $_FILES['photo']['size'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+
+            if ($fileSize > 1048576) { // 1MB
+                return null; // Fail silently or throw error in real app
+            }
+
+            if (in_array($fileExtension, $allowedfileExtensions)) {
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = __DIR__ . '/../uploads/';
+                
+                if (!is_dir($uploadFileDir)) { mkdir($uploadFileDir, 0755, true); }
+                
+                if(move_uploaded_file($fileTmpPath, $uploadFileDir . $newFileName)) {
+                    return $newFileName;
+                }
+            }
+        }
+        return null;
     }
     
     private function validate($data) {
@@ -164,6 +142,11 @@ class MemberController {
         $this->member->email = $data->email;
         $this->member->phone = $data->phone ?? '';
         $this->member->status = $data->status ?? 'active';
+    }
+
+    private function sendBadRequest() {
+        http_response_code(400);
+        echo json_encode(["message" => "Incomplete data."]);
     }
 }
 ?>
