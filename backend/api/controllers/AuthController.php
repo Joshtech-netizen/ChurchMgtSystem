@@ -17,18 +17,14 @@ class AuthController {
             $this->user->email = $data->email;
 
             if($this->user->emailExists()) {
-                // Verify Password
                 if(password_verify($data->password, $this->user->password)) {
-                    
-                    // Create Token Payload
                     $jwt = new JwtHandler();
                     $token_data = [
                         'user_id' => $this->user->id,
                         'email' => $this->user->email,
                         'role' => $this->user->role,
-                        'exp' => time() + (60 * 60 * 24) // Expire in 24 hours
+                        'exp' => time() + (60 * 60 * 24)
                     ];
-                    
                     $token = $jwt->encode($token_data);
 
                     http_response_code(200);
@@ -52,6 +48,40 @@ class AuthController {
         } else {
             http_response_code(400);
             echo json_encode(["message" => "Data is incomplete."]);
+        }
+    }
+
+    public function register() {
+        $data = json_decode(file_get_contents("php://input"));
+
+        if(
+            !empty($data->first_name) &&
+            !empty($data->last_name) &&
+            !empty($data->email) &&
+            !empty($data->password)
+        ){
+            $this->user->first_name = $data->first_name;
+            $this->user->last_name = $data->last_name;
+            $this->user->email = $data->email;
+            $this->user->password = $data->password;
+            // Default role is 'admin' for now, or you could make this 'finance', 'youth' via dropdown
+            $this->user->role = 'admin'; 
+
+            if($this->user->emailExists()){
+                http_response_code(400);
+                echo json_encode(["message" => "Email already exists."]);
+            } else {
+                if($this->user->create()){
+                    http_response_code(201);
+                    echo json_encode(["message" => "User registered successfully."]);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(["message" => "Unable to register user."]);
+                }
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Incomplete data."]);
         }
     }
 }
