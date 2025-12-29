@@ -48,54 +48,108 @@ const Sidebar = ({ isOpen }) => {
     };
 
     return (
-        <div style={sidebarStyle} className="sidebar">
-            <div style={logoStyle}>
-                <span className="material-symbols-outlined" style={{fontSize: '2.5rem'}}>church</span>
-                <span style={{fontSize: '1rem', fontWeight: '700', letterSpacing: '1px'}}>
-                    {user?.role === 'admin' ? 'CHURCH ADMIN' : user?.role.toUpperCase() + ' PORTAL'}
-                </span>
-            </div>
-
-            <nav>
-                {/* 1. DASHBOARD - Everyone sees this */}
-                <Link to="/" style={getLinkStyle('/')}>
-                    <span className="material-symbols-outlined">dashboard</span>
-                    Dashboard
-                </Link>
-
-                {/* 2. MEMBERS - Admin, Evangelism, Youth, Children */}
-                {canAccess(['evangelism', 'youth', 'children']) && (
-                    <Link to="/members" style={getLinkStyle('/members')}>
-                        <span className="material-symbols-outlined">group</span>
-                        Members Directory
-                    </Link>
-                )}
-
-                {/* 3. DONATIONS - Admin, Finance, Building */}
-                {canAccess(['finance', 'building']) && (
-                    <Link to="/donations" style={getLinkStyle('/donations')}>
-                        <span className="material-symbols-outlined">payments</span>
-                        Financial Records
-                    </Link>
-                )}
-
-                {/* 4. ATTENDANCE - Admin, Youth, Children */}
-                {canAccess(['youth', 'children']) && (
-                    <Link to="/attendance" style={getLinkStyle('/attendance')}>
-                        <span className="material-symbols-outlined">event_available</span>
-                        Attendance
-                    </Link>
-                )}
-                {/* 5. EVENTS - Admin, Evangelism */}
-                {canAccess(['evangelism']) && (
-                    <Link to="/events" style={getLinkStyle('/events')}>
-                        <span className="material-symbols-outlined">calendar_month</span>
-                        Events
-                    </Link>
-                )}  
-            </nav>
+      <div style={sidebarStyle} className="sidebar">
+        <div style={logoStyle}>
+          {/* REPLACED ICON WITH IMAGE */}
+          <img
+            src={process.env.PUBLIC_URL + "/logo.png"}
+            alt="Church Logo"
+            style={{
+              width: "60px",
+              height: "60px",
+              objectFit: "contain",
+              marginBottom: "10px",
+            }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.style.display = "none"; // Hide if broken
+              console.log("Logo not found at:", e.target.src);
+            }}
+          />
+          <span
+            style={{
+              fontSize: "1rem",
+              fontWeight: "700",
+              letterSpacing: "1px",
+              textAlign: "center",
+            }}
+          >
+            CHURCH OF CHRIST-EFFIDUASE {/* Change to your Church Name */}
+          </span>
+          <span
+            style={{ fontSize: "0.7rem", opacity: 0.7, letterSpacing: "2px" }}
+          >
+            MANAGEMENT SYSTEM
+          </span>
         </div>
-    );
-};
 
+        <nav>
+          {/* 1. DASHBOARD - Everyone sees this */}
+          <Link to="/" style={getLinkStyle("/")}>
+            <span className="material-symbols-outlined">dashboard</span>
+            Dashboard
+          </Link>
+
+          {/* 2. MEMBERS - Admin, Evangelism, Youth, Children */}
+          {canAccess(["evangelism", "youth", "children"]) && (
+            <Link to="/members" style={getLinkStyle("/members")}>
+              <span className="material-symbols-outlined">group</span>
+              Members Directory
+            </Link>
+          )}
+
+          {/* 3. DONATIONS - Admin, Finance, Building */}
+          {canAccess(["finance", "building"]) && (
+            <Link to="/donations" style={getLinkStyle("/donations")}>
+              <span className="material-symbols-outlined">payments</span>
+              Financial Records
+            </Link>
+          )}
+
+          {/* 4. ATTENDANCE - Admin, Youth, Children */}
+          {canAccess(["youth", "children"]) && (
+            <Link to="/attendance" style={getLinkStyle("/attendance")}>
+              <span className="material-symbols-outlined">event_available</span>
+              Attendance
+            </Link>
+          )}
+
+          {/* 5. EVENTS - Admin, Evangelism */}
+          {canAccess(["evangelism"]) && (
+            <Link to="/events" style={getLinkStyle("/events")}>
+              <span className="material-symbols-outlined">calendar_month</span>
+              Events
+            </Link>
+          )}
+
+          {/* 6. Profile - Everyone sees this */}
+          <Link to="/profile" style={getLinkStyle("/profile")}>
+            <span className="material-symbols-outlined">person</span>
+            My Profile
+          </Link>
+
+          {/* 7. SYSTEM USERS - Admin Only */}
+          {user?.role === "admin" && (
+            <Link to="/users" style={getLinkStyle("/users")}>
+              <span className="material-symbols-outlined">manage_accounts</span>
+              System Users
+            </Link>
+          )}
+
+          {/* 8. Announcements - Everyone sees this */}
+          <Link to="/announcements" style={getLinkStyle("/announcements")}>
+            <span className="material-symbols-outlined">campaign</span>
+            Announcements
+          </Link>
+          {/* 9. Pledges - Admin, Finance, Building */}
+          {canAccess(["finance", "building"]) && (
+            <Link to="/pledges" style={getLinkStyle("/pledges")}>
+              <span className="material-symbols-outlined">receipt_long</span>
+              Pledges
+            </Link>
+          )}
+        </nav>
+      </div>
+    );
+}
 export default Sidebar;
