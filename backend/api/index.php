@@ -23,6 +23,10 @@ if (file_exists('models/User.php')) include_once 'models/User.php';
 if (file_exists('controllers/AuthController.php')) include_once 'controllers/AuthController.php';
 if (file_exists('models/Event.php')) include_once 'models/Event.php';
 if (file_exists('controllers/EventController.php')) include_once 'controllers/EventController.php';
+if (file_exists('models/Announcement.php')) include_once 'models/Announcement.php';
+if (file_exists('controllers/CommunicationController.php')) include_once 'controllers/CommunicationController.php';
+if (file_exists('models/Pledge.php')) include_once 'models/Pledge.php';
+if (file_exists('controllers/PledgeController.php')) include_once 'controllers/PledgeController.php';
 
 // 3. Parse URL
 $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';
@@ -56,13 +60,37 @@ switch ($resource) {
         $auth = new AuthController($db);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') $auth->login();
         break;
-    case 'register': // NEW ROUTE
+    case 'register': 
         $auth = new AuthController($db);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') $auth->register();
         break;
     case 'events':
         $controller = new EventController($db);
         $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        break;
+    case 'profile':
+         if ($id === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $auth = new AuthController($db);
+            $auth->updateProfile();
+        }
+        break;
+    case 'announcements':
+        $controller = new CommunicationController($db);
+        $controller->processRequest($_SERVER["REQUEST_METHOD"]);
+        break;
+    case 'pledges':
+        $controller = new PledgeController($db);
+        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        break;
+    case 'users':
+        $auth = new AuthController($db);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $auth->getAllUsers();
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $auth->adminCreateUser();
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $id) {
+            $auth->deleteUser($id);
+        }
         break;
     default:
         http_response_code(404);
