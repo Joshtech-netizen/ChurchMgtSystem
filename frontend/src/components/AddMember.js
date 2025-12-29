@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
+import { toast } from 'react-toastify';
 
 const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
+        gender: '',
         email: '',
-        phone: '',
+        dob: '',
+        address: '',
+        phone: '+233',
         status: 'active'
     });
     const [photo, setPhoto] = useState(null);
@@ -15,11 +19,14 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
     useEffect(() => {
         if (memberToEdit) {
             setFormData({
-                first_name: memberToEdit.first_name,
-                last_name: memberToEdit.last_name,
-                email: memberToEdit.email,
-                phone: memberToEdit.phone,
-                status: memberToEdit.status
+                first_name: memberToEdit.first_name || '',
+                last_name: memberToEdit.last_name || '',
+                gender: memberToEdit.gender || '',
+                email: memberToEdit.email || '',
+                dob: memberToEdit.dob || '',
+                address: memberToEdit.address || '',
+                phone: memberToEdit.phone || '+233',
+                status: memberToEdit.status || 'active'
             });
         }
     }, [memberToEdit]);
@@ -32,7 +39,7 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 1048576) {
-                setError("File is too large! Max size is 1MB.");
+                setError("File too large. Max 1MB.");
                 setPhoto(null);
                 e.target.value = null;
                 return;
@@ -48,32 +55,30 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
         
         try {
             const data = new FormData();
-            data.append('first_name', formData.first_name);
-            data.append('last_name', formData.last_name);
-            data.append('email', formData.email);
-            data.append('phone', formData.phone);
-            data.append('status', formData.status);
+            Object.keys(formData).forEach(key => {
+                data.append(key, formData[key]);
+            });
             
             if (photo) {
                 data.append('photo', photo);
             }
 
-            // CRITICAL CHANGE: We use POST for both Add and Edit
             if (memberToEdit) {
-                // Update (POST to ID)
                 await api.post(`/members/${memberToEdit.id}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
+                toast.success("Member updated successfully!"); // NEW
             } else {
-                // Create (POST to Collection)
                 await api.post('/members', data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
+                toast.success("New member added!"); // NEW
             }
             onMemberSaved(); 
         } catch (err) {
-            console.error(err);
-            setError(err.response?.data?.message || "Error saving member.");
+            // Use toast.error instead of setting local state error (optional, but cleaner)
+            const msg = err.response?.data?.message || "Error saving member.";
+            toast.error(msg); // NEW
         }
     };
 
@@ -88,53 +93,84 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
                     <div style={{flex: 1}}>
                         <label>First Name</label>
                         <input 
-                            type="text" name="first_name" 
-                            value={formData.first_name} onChange={handleChange} required 
+                            type="text" name="first_name" required
+                            value={formData.first_name} onChange={handleChange}
                             style={{width: '100%'}}
                         />
                     </div>
                     <div style={{flex: 1}}>
                         <label>Last Name</label>
                         <input 
-                            type="text" name="last_name" 
-                            value={formData.last_name} onChange={handleChange} required 
+                            type="text" name="last_name" required
+                            value={formData.last_name} onChange={handleChange}
+                            style={{width: '100%'}}
+                        />
+                    </div>
+                </div>
+
+                <div style={{display: 'flex', gap: '15px', marginBottom: '15px'}}>
+                    <div style={{flex: 1}}>
+                        <label>Gender</label>
+                        <select 
+                            name="gender" required
+                            value={formData.gender} onChange={handleChange}
+                            style={{width: '100%'}}
+                        >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div style={{flex: 1}}>
+                        <label>Date of Birth</label>
+                        <input 
+                            type="date" name="dob" 
+                            value={formData.dob} onChange={handleChange}
                             style={{width: '100%'}}
                         />
                     </div>
                 </div>
 
                 <div style={{marginBottom: '15px'}}>
-                    <label>Email</label>
-                    <input 
-                        type="email" name="email" 
-                        value={formData.email} onChange={handleChange} required 
-                        style={{width: '100%'}}
-                    />
-                </div>
-
-                <div style={{marginBottom: '15px'}}>
-                    <label>Phone</label>
+                    <label>Telephone</label>
                     <input 
                         type="text" name="phone" 
-                        value={formData.phone} onChange={handleChange} 
+                        value={formData.phone} onChange={handleChange}
+                        style={{width: '100%'}}
+                        placeholder="+233..."
+                    />
+                </div>
+
+                <div style={{marginBottom: '15px'}}>
+                    <label>Residential Address</label>
+                    <input 
+                        type="text" name="address" 
+                        value={formData.address} onChange={handleChange}
+                        style={{width: '100%'}}
+                        placeholder="House No, Street Name, Area"
+                    />
+                </div>
+
+                <div style={{marginBottom: '15px'}}>
+                    <label>Email Address</label>
+                    <input 
+                        type="email" name="email" required
+                        value={formData.email} onChange={handleChange}
                         style={{width: '100%'}}
                     />
                 </div>
 
-                {/* Always Show File Input */}
                 <div style={{marginBottom: '15px'}}>
-                    <label>Profile Photo (Max 1MB)</label>
+                    <label>Profile Photo</label>
                     <input 
-                        type="file" 
-                        accept="image/*"
+                        type="file" accept="image/*"
                         onChange={handleFileChange}
-                        style={{width: '100%', padding: '5px', border: '1px solid var(--border-color)', borderRadius: '4px'}}
+                        style={{width: '100%', padding: '5px', border: '1px solid var(--border-color)'}}
                     />
-                    {memberToEdit && <small style={{color: '#888'}}>Leave empty to keep current photo.</small>}
                 </div>
 
                 <div style={{marginBottom: '25px'}}>
-                    <label>Status</label>
+                    <label>Membership Status</label>
                     <select 
                         name="status" value={formData.status} onChange={handleChange}
                         style={{width: '100%'}}
@@ -150,7 +186,7 @@ const AddMember = ({ onMemberSaved, onCancel, memberToEdit }) => {
                         Cancel
                     </button>
                     <button type="submit" className="btn btn-primary">
-                        {memberToEdit ? 'Update' : 'Save'}
+                        {memberToEdit ? 'Update Member' : 'Save Member'}
                     </button>
                 </div>
             </form>
