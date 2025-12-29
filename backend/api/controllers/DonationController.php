@@ -10,12 +10,16 @@ class DonationController {
 
     public function processRequest($method, $id) {
         if ($method === 'GET') {
-            $this->getAll();
+            // NEW: Check for stats request
+            if (isset($_GET['stats'])) {
+                $this->getStats();
+            } else {
+                $this->getAll();
+            }
         } elseif ($method === 'POST') {
             $this->create();
-        } else {
-            http_response_code(405);
         }
+        // ... (keep PUT/DELETE if you added them)
     }
 
     private function getAll() {
@@ -61,6 +65,29 @@ class DonationController {
         } else {
             http_response_code(400);
             echo json_encode(["message" => "Incomplete data."]);
+        }
+    }
+
+    private function getStats() {
+        try {
+            // Group by Month, Filter by 'offering' (or remove filter to see all money)
+            // Last 6 Months
+            $query = "SELECT 
+                        DATE_FORMAT(donation_date, '%M') as month, 
+                        SUM(amount) as total 
+                      FROM donations 
+                      WHERE type = 'offering' 
+                      AND donation_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+                      GROUP BY YEAR(donation_date), MONTH(donation_date)
+                      ORDER BY donation_date ASC";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo json_encode([]);
         }
     }
 }
