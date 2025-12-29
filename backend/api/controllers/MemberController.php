@@ -136,11 +136,14 @@ class MemberController {
         return !empty($data->first_name) && !empty($data->last_name) && !empty($data->email);
     }
 
-    private function fillModel($data) {
+   private function fillModel($data) {
         $this->member->first_name = $data->first_name;
         $this->member->last_name = $data->last_name;
+        $this->member->gender = $data->gender ?? null; 
         $this->member->email = $data->email;
         $this->member->phone = $data->phone ?? '';
+        $this->member->dob = $data->dob ?? null;      
+        $this->member->address = $data->address ?? ''; 
         $this->member->status = $data->status ?? 'active';
     }
 
