@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -70,11 +70,7 @@ const Login = () => {
                             Sign In
                         </button>
                     </form>
-                    
-                    <p style={{marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#666'}}>
-                        Don't have an account? <Link to="/register" style={{color: 'var(--primary-blue)', fontWeight: '600', textDecoration: 'none'}}>Register here</Link>
-                    </p>
-                </div>
+                 </div>
             </div>
         </div>
     );
