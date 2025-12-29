@@ -3,13 +3,18 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Login from './components/Login';
-import Register from './components/Register'; 
 import Dashboard from './components/Dashboard';
 import MemberList from './components/MemberList';
 import DonationList from './components/DonationList';
 import AttendancePage from './components/AttendancePage';
 import EventList from './components/EventList';
+import Profile from './components/Profile';
+import Announcements from './components/Announcement';
+import Pledges from './components/Pledges';
+import Users from './components/Users';
 import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // IMPORT CSS
 
 const AppLayout = () => {
     const { user, logout } = useContext(AuthContext);
@@ -20,7 +25,6 @@ const AppLayout = () => {
         return (
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
         );
@@ -63,6 +67,10 @@ const AppLayout = () => {
                  <Route path="/donations" element={<DonationList />} />
                  <Route path="/attendance" element={<AttendancePage />} />
                  <Route path="/events" element={<EventList />} />
+                 <Route path="/profile" element={<Profile />} />
+                 <Route path="/users" element={<Users />} />
+                 <Route path="/announcements" element={<Announcements />} />
+                 <Route path="/pledges" element={<Pledges />} />
                  <Route path="*" element={<Navigate to="/" />} />
                </Routes>
             </div>
@@ -75,6 +83,8 @@ function App() {
     <AuthProvider>
         <Router>
             <AppLayout />
+            {/* Global Notification Container */}
+            <ToastContainer position="top-right" autoClose={3000} />
         </Router>
     </AuthProvider>
   );
