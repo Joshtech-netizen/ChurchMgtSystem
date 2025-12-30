@@ -31,17 +31,24 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // 3. ROUTER LOGIC
 switch ($method) {
-    case 'GET':
-        // --- FETCH ALL MEMBERS ---
-        $sql = "SELECT id, name, email, role, status FROM members ORDER BY id DESC";
+case 'GET':
+        // --- FETCH MEMBERS ---
+        $sql = "SELECT id, first_name, surname, other_names, email, mobile, role, status, photo_url FROM members ORDER BY id DESC";
+        
         $result = $conn->query($sql);
         $members = [];
-        if ($result->num_rows > 0) {
+
+        if ($result && $result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
                 $row['id'] = (int)$row['id'];
                 $members[] = $row;
             }
         }
+        // If SQL fails, $result is false, so we return empty array or error
+        if (!$result) {
+            error_log("SQL Error: " . $conn->error); // Log to PHP error log
+        }
+        
         echo json_encode($members);
         break;
 
