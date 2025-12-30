@@ -7,8 +7,14 @@ export interface StreamEvent {
 
 export interface Member {
   id: number;
-  name: string;
+  first_name: string;
+  surname: string;
+  other_names?: string;
   email: string;
+  mobile: string;
+  address?: string;
+  dob?: string;
+  photo_url?: string;
   role: "Admin" | "Member" | "Guest";
   status: "Active" | "Inactive";
 }
