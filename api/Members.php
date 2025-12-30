@@ -10,7 +10,7 @@ header("Access-Control-Allow-Methods: GET");
 $host = "localhost";
 $user = "root";     // Default XAMPP user
 $pass = "";         // Default XAMPP password (usually empty)
-$db_name = "church_db"; // <--- CHANGE THIS to your actual DB name
+$db_name = "coc-eff_db"; // <--- CHANGE THIS to your actual DB name
 
 // 3. CONNECT
 $conn = new mysqli($host, $user, $pass, $db_name);
