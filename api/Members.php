@@ -46,28 +46,49 @@ switch ($method) {
         break;
 
     case 'POST':
-        // --- ADD NEW MEMBER ---
-        // Read the JSON sent by React
-        $data = json_decode(file_get_contents("php://input"));
+        $first_name = $_POST['first_name'] ?? '';
+        $surname = $_POST['surname'] ?? '';
+        $other_names = $_POST['other_names'] ?? '';
+        $dob = $_POST['dob'] ?? '';
+        $address = $_POST['address'] ?? '';
+        $mobile = $_POST['mobile'] ?? '';
+        $role = $_POST['role'] ?? 'Member';
+        $status = $_POST['status'] ?? 'Active';
+        $email = $_POST['email'] ?? '';
 
-        if(!empty($data->name) && !empty($data->role)) {
-            // Prepare statement to prevent hacking (SQL Injection)
-            $stmt = $conn->prepare("INSERT INTO members (name, email, role, status) VALUES (?, ?, ?, ?)");
-            $status = "Active"; // Default
-            $stmt->bind_param("ssss", $data->name, $data->email, $data->role, $status);
-            
-            if($stmt->execute()) {
-                // Send back the new ID so React can update the list immediately
-                echo json_encode(["message" => "Member created", "id" => $conn->insert_id]);
-            } else {
-                http_response_code(503);
-                echo json_encode(["message" => "Unable to create member."]);
-            }
-            $stmt->close();
-        } else {
+        if(empty($first_name) || empty($surname)) {
             http_response_code(400);
-            echo json_encode(["message" => "Incomplete data."]);
+            echo json_encode(["message" => "Name fields are required."]);
+            exit();
         }
+
+        // 2. HANDLE PHOTO UPLOAD
+        $photo_url = ""; // Default empty
+        
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
+            $upload_dir = "uploads/";
+            // Create unique name: member_TIMESTAMP_filename.jpg
+            $file_name = "member_" . time() . "_" . basename($_FILES['photo']['name']);
+            $target_file = $upload_dir . $file_name;
+
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
+                // Save the full URL so React can display it easily
+                $photo_url = "http://localhost/church-system/api/" . $target_file;
+            }
+        }
+
+        // 3. INSERT INTO DB
+        $stmt = $conn->prepare("INSERT INTO members (first_name, surname, other_names, dob, address, mobile, email, role, status, photo_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        $stmt->bind_param("ssssssssss", $first_name, $surname, $other_names, $dob, $address, $mobile, $email, $role, $status, $photo_url);
+        
+        if($stmt->execute()) {
+            echo json_encode(["message" => "Member created", "id" => $conn->insert_id, "photo_url" => $photo_url]);
+        } else {
+            http_response_code(503);
+            echo json_encode(["message" => "Database error: " . $stmt->error]);
+        }
+        $stmt->close();
         break;
 
     case 'DELETE':
