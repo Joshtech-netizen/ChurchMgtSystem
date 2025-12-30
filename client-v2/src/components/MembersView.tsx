@@ -8,9 +8,8 @@ export const MembersView = () => {
 
   const handleSaveMember = async (formData: FormData) => {
     await addMember(formData);
-    // Note: To see the new member instantly, you might need to refresh 
-    // or update 'addMember' to reload data. For now, a page refresh works best.
-    window.location.reload(); 
+    // We don't need window.location.reload() anymore!
+    // The hook will auto-refresh the list.
   };
 
   return (
