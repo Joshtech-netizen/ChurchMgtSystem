@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Member } from '../types';
+import { type Member } from '../types';
 
 export const useMembers = () => {
   const [members, setMembers] = useState<Member[]>([]);
