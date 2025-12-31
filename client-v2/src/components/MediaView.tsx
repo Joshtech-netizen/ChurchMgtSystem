@@ -27,24 +27,26 @@ export const MediaView = () => {
         {/* The Add Form */}
         <form onSubmit={handleSubmit} className="flex gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
           <div className="flex-1">
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Event Topic</label>
+            <label htmlFor="topic" className="block text-xs font-bold text-slate-500 mb-1 uppercase">Event Topic</label>
             <input 
+              id="topic"
               className="w-full p-2 border rounded text-sm"
               placeholder="e.g. Sunday Service" 
               value={topic} onChange={e => setTopic(e.target.value)} 
             />
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Preacher (Opt)</label>
+            <label htmlFor="preacher" className="block text-xs font-bold text-slate-500 mb-1 uppercase">Preacher (Opt)</label>
             <input 
+              id="preacher"
               className="w-full p-2 border rounded text-sm"
               placeholder="Rev. Joseph" 
               value={preacher} onChange={e => setPreacher(e.target.value)} 
             />
           </div>
           <div className="">
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Date</label>
-            <input 
+            <label htmlFor="date" className="block text-xs font-bold text-slate-500 mb-1 uppercase">Date</label>
+            <input id="date"
               type="date"
               className="p-2 border rounded text-sm"
               value={date} onChange={e => setDate(e.target.value)} 
