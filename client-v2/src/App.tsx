@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { MembersView } from './components/MembersView';
 import { MediaView } from './components/MediaView';
+import { DashboardHome } from './components/DashboardHome';
 
 function App() {
   // 1. State lives here now!
@@ -11,7 +12,7 @@ function App() {
   const renderContent = () => {
     switch (currentView) {
       case "Dashboard":
-        return <DashboardStats />;
+        return <DashboardHome />;
       case "Members":
         return <MembersView />;
       case "Media Team":
@@ -45,24 +46,5 @@ function App() {
   );
 }
 
-// Internal component just to keep the file clean (The old dashboard cards)
-const DashboardStats = () => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-slate-500 text-sm font-medium">Total Members</h3>
-        <p className="text-3xl font-bold text-slate-800 mt-2">1,240</p>
-      </div>
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-slate-500 text-sm font-medium">Monthly Tithe</h3>
-        <p className="text-3xl font-bold text-green-600 mt-2">$12,450</p>
-      </div>
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-slate-500 text-sm font-medium">Next Stream</h3>
-        <p className="text-xl font-bold text-blue-600 mt-2">Sunday Service</p>
-      </div>
-    </div>
-  );
-};
 
 export default App;
