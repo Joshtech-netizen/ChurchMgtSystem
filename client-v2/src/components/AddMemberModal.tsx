@@ -6,8 +6,7 @@ interface AddMemberModalProps {
   onSave: (formData: FormData) => Promise<void>;
 }
 
-export const AddMemberModal = ({ isOpen, onClose, onSave }: AddMemberModalProps) => {
-  if (!isOpen) return null; // Don't render if closed
+export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
