@@ -25,12 +25,13 @@ export const MembersView = () => {
       </div>
 
       {/* The Modal Component */}
-      <AddMemberModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSave={handleSaveMember} 
-      />
-
+      {isModalOpen && (
+        <AddMemberModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          onSave={handleSaveMember} 
+        />
+      )}
       {/* Existing Table Code... (Update columns to show First Name / Surname) */}
       {!isLoading && (
         <div className="border rounded-lg overflow-hidden">
