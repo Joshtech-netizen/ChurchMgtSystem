@@ -18,3 +18,11 @@ export interface Member {
   role: "Admin" | "Member" | "Guest";
   status: "Active" | "Inactive";
 }
+
+export interface User {
+  id: number;
+  username: string;
+  role: string;
+}
+
+
