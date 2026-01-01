@@ -1,3 +1,18 @@
+export type UserRole = 
+  | 'Super Admin' 
+  | 'Admin' 
+  | 'Youth Leader' 
+  | 'Children Leader' 
+  | 'Women Leader' 
+  | 'Evangelism Leader' 
+  | 'Visitation Leader';
+
+export interface User {
+  id: number;
+  username: string;
+  role: UserRole;
+}
+
 export interface StreamEvent {
   id: number;
   topic: string;
@@ -18,11 +33,3 @@ export interface Member {
   role: "Admin" | "Member" | "Guest";
   status: "Active" | "Inactive";
 }
-
-export interface User {
-  id: number;
-  username: string;
-  role: string;
-}
-
-
