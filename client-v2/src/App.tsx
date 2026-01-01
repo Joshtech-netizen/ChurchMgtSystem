@@ -7,6 +7,7 @@ import { LoginView } from './components/LoginView';
 import { DashboardHome } from './components/DashboardHome';
 import { MembersView } from './components/MembersView';
 import { MediaView } from './components/MediaView';
+import { FinanceView } from './components/FinanceView';
 
 function App() {
   // 1. GLOBAL STATE
@@ -52,8 +53,8 @@ function App() {
         return <DashboardHome />;
       case "Members":
         return <MembersView />;
-      //case "Finances":
-        //return <FinanceView />;
+      case "Finances":
+        return <FinanceView />;
       case "Media Team":
         return <MediaView />;
       default:
