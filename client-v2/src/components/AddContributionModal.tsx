@@ -66,8 +66,9 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
           {/* 2. MEMBER SELECT (Hidden if Anonymous) */}
           {!isAnonymous && (
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Select Member</label>
+              <label htmlFor="member" className="block text-xs font-bold text-slate-500 uppercase mb-1">Select Member</label>
               <select 
+                id="member"
                 className="w-full p-2 border rounded" 
                 value={memberId} 
                 onChange={e => setMemberId(e.target.value)}
@@ -83,16 +84,18 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Amount (GHS)</label>
+              <label htmlFor="amount" className="block text-xs font-bold text-slate-500 uppercase mb-1">Amount (GHS)</label>
               <input 
                 type="number" step="0.01" 
+                id="amount"
                 className="w-full p-2 border rounded font-bold text-slate-800" 
                 value={amount} onChange={e => setAmount(e.target.value)} required 
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Category</label>
+              <label htmlFor="category" className="block text-xs font-bold text-slate-500 uppercase mb-1">Category</label>
               <select 
+                id="category"
                 className="w-full p-2 border rounded" 
                 value={category} onChange={e => setCategory(e.target.value)}
               >
@@ -104,9 +107,10 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Date</label>
+            <label htmlFor="date" className="block text-xs font-bold text-slate-500 uppercase mb-1">Date</label>
             <input 
               type="date" 
+              id="date"
               className="w-full p-2 border rounded" 
               value={date} onChange={e => setDate(e.target.value)} required 
             />
