@@ -59,8 +59,9 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
           
           {/* Photo Upload (Full Width) */}
           <div className="col-span-full mb-2">
-            <label className="block text-sm font-bold text-slate-700 mb-2">Member Photo</label>
+            <label htmlFor="photo" className="block text-sm font-bold text-slate-700 mb-2">Member Photo</label>
             <input 
+              id="photo"
               type="file" 
               accept="image/*"
               onChange={(e) => setPhoto(e.target.files ? e.target.files[0] : null)}
@@ -69,43 +70,43 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">First Name *</label>
-            <input required className="w-full p-2 border rounded mt-1" value={firstName} onChange={e => setFirstName(e.target.value)} />
+            <label htmlFor="firstName" className="block text-xs font-bold text-slate-500 uppercase">First Name *</label>
+            <input required id="firstName" className="w-full p-2 border rounded mt-1" value={firstName} onChange={e => setFirstName(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Surname *</label>
-            <input required className="w-full p-2 border rounded mt-1" value={surname} onChange={e => setSurname(e.target.value)} />
+            <label htmlFor="surname" className="block text-xs font-bold text-slate-500 uppercase">Surname *</label>
+            <input required id="surname" className="w-full p-2 border rounded mt-1" value={surname} onChange={e => setSurname(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Other Names</label>
-            <input className="w-full p-2 border rounded mt-1" value={otherNames} onChange={e => setOtherNames(e.target.value)} />
+            <label htmlFor="otherNames" className="block text-xs font-bold text-slate-500 uppercase">Other Names</label>
+            <input id="otherNames" className="w-full p-2 border rounded mt-1" value={otherNames} onChange={e => setOtherNames(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Date of Birth</label>
-            <input type="date" className="w-full p-2 border rounded mt-1" value={dob} onChange={e => setDob(e.target.value)} />
+            <label htmlFor="dob" className="block text-xs font-bold text-slate-500 uppercase">Date of Birth</label>
+            <input id="dob" type="date" className="w-full p-2 border rounded mt-1" value={dob} onChange={e => setDob(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Mobile Number</label>
-            <input type="tel" className="w-full p-2 border rounded mt-1" value={mobile} onChange={e => setMobile(e.target.value)} />
+            <label htmlFor="mobile" className="block text-xs font-bold text-slate-500 uppercase">Mobile Number</label>
+            <input id="mobile" type="tel" className="w-full p-2 border rounded mt-1" value={mobile} onChange={e => setMobile(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Email</label>
-            <input type="email" className="w-full p-2 border rounded mt-1" value={email} onChange={e => setEmail(e.target.value)} />
+            <label htmlFor="email"  className="block text-xs font-bold text-slate-500 uppercase">Email</label>
+            <input id="email" type="email" className="w-full p-2 border rounded mt-1" value={email} onChange={e => setEmail(e.target.value)} />
           </div>
 
           <div className="col-span-full">
-            <label className="block text-xs font-bold text-slate-500 uppercase">Residential Address</label>
-            <textarea className="w-full p-2 border rounded mt-1" rows={2} value={address} onChange={e => setAddress(e.target.value)} />
+            <label htmlFor="address" className="block text-xs font-bold text-slate-500 uppercase">Residential Address</label>
+            <textarea id="address" className="w-full p-2 border rounded mt-1" rows={2} value={address} onChange={e => setAddress(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Role</label>
-            <select className="w-full p-2 border rounded mt-1" value={role} onChange={e => setRole(e.target.value)}>
+            <label htmlFor="role" className="block text-xs font-bold text-slate-500 uppercase">Role</label>
+            <select id="role" className="w-full p-2 border rounded mt-1" value={role} onChange={e => setRole(e.target.value)}>
               <option value="Member">Member</option>
               <option value="Admin">Admin</option>
               <option value="Guest">Guest</option>
@@ -113,8 +114,8 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase">Status</label>
-            <select className="w-full p-2 border rounded mt-1" value={status} onChange={e => setStatus(e.target.value)}>
+            <label htmlFor="status" className="block text-xs font-bold text-slate-500 uppercase">Status</label>
+            <select id="status" className="w-full p-2 border rounded mt-1" value={status} onChange={e => setStatus(e.target.value)}>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
