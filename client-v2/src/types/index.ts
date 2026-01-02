@@ -25,6 +25,8 @@ export interface Member {
   first_name: string;
   surname: string;
   other_names?: string;
+  gender?: "Male" | "Female ";
+  ministry?: string;
   email: string;
   mobile: string;
   address?: string;

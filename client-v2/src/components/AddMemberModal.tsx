@@ -14,6 +14,8 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
   const [firstName, setFirstName] = useState("");
   const [surname, setSurname] = useState("");
   const [otherNames, setOtherNames] = useState("");
+  const [gender, setGender] = useState("Male");
+  const [ministry, setMinistry] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [dob, setDob] = useState("");
@@ -30,6 +32,8 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
     formData.append("first_name", firstName);
     formData.append("surname", surname);
     formData.append("other_names", otherNames);
+    formData.append("gender", gender);
+    formData.append("ministry", ministry);
     formData.append("email", email);
     formData.append("mobile", mobile);
     formData.append("dob", dob);
@@ -82,6 +86,25 @@ export const AddMemberModal = ({ onClose, onSave }: AddMemberModalProps) => {
           <div>
             <label htmlFor="otherNames" className="block text-xs font-bold text-slate-500 uppercase">Other Names</label>
             <input id="otherNames" className="w-full p-2 border rounded mt-1" value={otherNames} onChange={e => setOtherNames(e.target.value)} />
+          </div>
+
+          <div>
+            <label htmlFor="gender" className="block text-xs font-bold text-slate-500 uppercase     ">Gender  </label>
+            <select id="gender" className="w-full p-2 border rounded mt-1" value={gender} onChange={e => setGender(e.target.value)}>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="ministry" className="block text-xs font-bold text-slate-500 uppercase">Ministry</label>
+            <select id="ministry" className="w-full p-2 border rounded mt-1" value={ministry} onChange={e => setMinistry(e.target.value)}>
+            <option value="General">General Congregation</option>
+          <option value="Men's Fellowship">Men's Fellowship</option>
+          <option value="Women's Fellowship">Women's Fellowship</option>
+          <option value="Youth Ministry">Youth Ministry</option>
+          <option value="Children Ministry">Children Ministry</option>
+          </select>
           </div>
 
           <div>

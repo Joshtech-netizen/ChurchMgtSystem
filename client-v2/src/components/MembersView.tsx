@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useMembers } from '../hooks/useMembers';
-import { AddMemberModal } from './AddMemberModal';
+import { AddMemberModal } from './AddMemberModal'; 
+import { MemberDetailModal } from './MemberDetailModal';
 
 export const MembersView = () => {
   const { members, isLoading, error, addMember, deleteMember } = useMembers();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<null | Member>(null);
 
   const handleSaveMember = async (formData: FormData) => {
     await addMember(formData);
@@ -13,6 +15,7 @@ export const MembersView = () => {
   };
 
   return (
+    <div className="space-y-6">
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-slate-800">Church Directory</h2>
@@ -23,6 +26,11 @@ export const MembersView = () => {
           + Add New Member
         </button>
       </div>
+      {/*RENDER DETAIL MODAL */}
+      <MemberDetailModal 
+        member={selectedMember} 
+        onClose={() => setSelectedMember(null)} 
+      />
 
       {/* The Modal Component */}
       {isModalOpen && (
@@ -34,8 +42,8 @@ export const MembersView = () => {
       )}
       {/* Existing Table Code... (Update columns to show First Name / Surname) */}
       {!isLoading && (
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-left">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full text-left">
             <thead className="bg-slate-50 border-b">
               <tr>
                 <th className="p-3">Photo</th>
@@ -45,9 +53,9 @@ export const MembersView = () => {
                 <th className="p-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {members.map((member) => (
-                <tr key={member.id} className="hover:bg-slate-50">
+            <tbody className="divide-y">
+            {members.map(member => (
+              <tr key={member.id} className="hover:bg-slate-50 group cursor-pointer" onClick={() => setSelectedMember(member)}>
                   <td className="p-3">
                     {member.photo_url ? (
                       <img src={member.photo_url} alt="Profile" className="w-10 h-10 rounded-full object-cover border" />
@@ -64,6 +72,17 @@ export const MembersView = () => {
                   <td className="p-3">
                     <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-bold">{member.role}</span>
                   </td>
+                  <td className="p-4 text-right">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row click
+                      setSelectedMember(member);
+                    }}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-bold px-3 py-1 bg-blue-50 rounded hover:bg-blue-100 transition"
+                  >
+                    View Profile
+                  </button>
+                </td>
                   <td className="p-3 text-right">
                     <button onClick={() => deleteMember(member.id)} className="text-red-400 hover:text-red-600">Delete</button>
                   </td>
@@ -73,6 +92,7 @@ export const MembersView = () => {
           </table>
         </div>
       )}
+    </div>
     </div>
   );
 };
