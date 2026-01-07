@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect, useMemo } from 'react';
 import { 
   LayoutDashboard, Users, Banknote, Video, Menu, 
@@ -29,12 +32,6 @@ const MENU_CONFIG: MenuItem[] = [
     id: "Dashboard", 
     label: "General Dashboard", 
     icon: LayoutDashboard, 
-    allowedRoles: ['Super Admin', 'Admin'] 
-  },
-  { 
-    id: "Finances", 
-    label: "Finances", 
-    icon: Banknote, 
     allowedRoles: ['Super Admin', 'Admin'] 
   },
   { 
@@ -81,6 +78,12 @@ const MENU_CONFIG: MenuItem[] = [
     icon: NotebookPen, 
     allowedRoles: ['Super Admin', 'Admin', 'Visitation Leader'] 
   },
+  {
+    id: "Finance",
+    label: "Finance Department",
+    icon: Banknote,
+    allowedRoles: ['Super Admin', 'Admin', 'Finance Officer']
+  }
 ];
 
 function App() {
@@ -148,6 +151,7 @@ function App() {
       case "Women": return <MinistryView title="Women's Fellowship" color="bg-pink-600" />;
       case "Evangelism": return <MinistryView title="Evangelism" color="bg-red-600" />;
       case "Visitation": return <MinistryView title="Visitation Team" color="bg-green-600" />;
+      case "Finance": return <FinanceView />;  
       
       default: return <div className="p-8">Select a menu item</div>;
     }

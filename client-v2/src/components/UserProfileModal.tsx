@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { User, Lock, Save, X } from 'lucide-react';
+import { User as UserIcon, Lock, Save, X } from 'lucide-react';
+import { type User } from '../types'; 
 
 interface UserProfileModalProps {
-  user: any;
+  user: User; 
   isOpen: boolean;
   onClose: () => void;
 }
@@ -38,7 +39,7 @@ export const UserProfileModal = ({ user, isOpen, onClose }: UserProfileModalProp
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: user.id,
+          user_id: user.id, 
           current_password: currentPassword,
           new_password: newPassword
         })
@@ -48,16 +49,15 @@ export const UserProfileModal = ({ user, isOpen, onClose }: UserProfileModalProp
 
       if (response.ok) {
         setMessage({ text: "Password updated successfully!", type: "success" });
-        // Clear fields on success
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
-        // Optional: Close modal after 2 seconds
         setTimeout(onClose, 2000);
       } else {
         setMessage({ text: data.message || "Failed to update", type: "error" });
       }
     } catch (err) {
+      console.error(err); // 3. Fixed: Log the error so 'err' is used
       setMessage({ text: "Network error", type: "error" });
     } finally {
       setIsLoading(false);
@@ -71,13 +71,15 @@ export const UserProfileModal = ({ user, isOpen, onClose }: UserProfileModalProp
         {/* Header */}
         <div className="bg-slate-900 p-6 flex justify-between items-center text-white">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-lg"><User size={20} /></div>
+            {/* Used the renamed icon here */}
+            <div className="p-2 bg-blue-600 rounded-lg"><UserIcon size={20} /></div>
             <div>
               <h2 className="font-bold text-lg">My Profile</h2>
+              {/* TS now knows username/role exist */}
               <p className="text-xs text-slate-400">{user.username} • {user.role}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition"><X /></button>
+          <button type="button" onClick={onClose} className="text-slate-400 hover:text-white transition" aria-label="Close sidebar" title="Close sidebar"><X /></button>
         </div>
 
         {/* Content */}

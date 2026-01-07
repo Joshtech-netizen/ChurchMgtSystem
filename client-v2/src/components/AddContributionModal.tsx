@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react'; // Removed useEffect
 import { useMembers } from '../hooks/useMembers';
 
-// 1. DEFINE DATA TYPE (Fixes the 'any' error)
+// 1. DEFINE DATA TYPE
 export interface ContributionFormData {
   member_id: string | number | null;
   amount: number;
@@ -13,13 +13,10 @@ export interface ContributionFormData {
 interface AddContributionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // Use the specific type instead of 'any'
   onSave: (data: ContributionFormData) => Promise<void>; 
 }
 
 export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributionModalProps) => {
-  // 2. HOOKS FIRST (Fixes 'useState called conditionally' error)
-  // These must always run, regardless of whether the modal is open or closed.
   const { members } = useMembers(); 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,17 +28,18 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]); 
   const [notes, setNotes] = useState("");
 
-  // 3. RESET FORM ON OPEN
-  useEffect(() => {
-    if (isOpen) {
-      // Optional: Reset fields when the modal opens
-      setAmount("");
-      setNotes("");
-    }
-  }, [isOpen]);
+  
+  // This replaces the problematic useEffect
+  const handleClose = () => {
+    // Reset fields
+    setAmount("");
+    setNotes("");
+    setIsAnonymous(false);
+    setMemberId("");
+    // Trigger the parent's onClose
+    onClose();
+  };
 
-  // 4. NOW CHECK VISIBILITY
-  // We return null here, AFTER all hooks have been declared.
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,7 +56,7 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
 
     await onSave(payload);
     setIsLoading(false);
-    onClose();
+    handleClose(); // 
   };
 
   return (
@@ -67,7 +65,8 @@ export const AddContributionModal = ({ isOpen, onClose, onSave }: AddContributio
         
         <div className="flex justify-between items-center mb-6 border-b pb-4">
           <h2 className="text-xl font-bold text-slate-800">Record Transaction</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+          {/* ✅ Use handleClose here instead of onClose */}
+          <button type="button" onClick={handleClose} className="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

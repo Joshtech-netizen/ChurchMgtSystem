@@ -1,12 +1,18 @@
-import { LogOut, X } from 'lucide-react';
+import { LogOut, X, type LucideIcon } from 'lucide-react';
 import { type User } from '../types';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: LucideIcon; // Tells TS this is a valid icon component
+}
 
 // 1. Define exactly what the Parent (App.tsx) needs to provide
 interface SidebarProps {
   user: User;
   activeTab: string;
   isOpen: boolean;
-  menuItems: any[]; // The list of allowed tabs (calculated in App.tsx)
+  menuItems: MenuItem[]; // The list of allowed tabs (calculated in App.tsx)
   onTabChange: (tabId: string) => void;
   onClose: () => void;
   onLogout: () => void;
@@ -42,7 +48,7 @@ export const Sidebar = ({
           </div>
         </div>
         {/* Mobile Close Button */}
-        <button onClick={onClose} className="md:hidden text-slate-400 hover:text-white">
+        <button type="button" onClick={onClose} className="md:hidden text-slate-400 hover:text-white" aria-label="Close sidebar" title="Close sidebar">
           <X size={24} />
         </button>
       </div>

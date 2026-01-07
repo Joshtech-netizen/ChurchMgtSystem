@@ -5,7 +5,8 @@ export type UserRole =
   | 'Children Leader' 
   | 'Women Leader' 
   | 'Evangelism Leader' 
-  | 'Visitation Leader';
+  | 'Visitation Leader'
+  | 'Finance Officer';
 
 export interface User {
   id: number;
@@ -25,7 +26,7 @@ export interface Member {
   first_name: string;
   surname: string;
   other_names?: string;
-  gender?: "Male" | "Female ";
+  gender?: "Male" | "Female";
   ministry?: string;
   email: string;
   mobile: string;

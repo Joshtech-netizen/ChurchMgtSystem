@@ -2,9 +2,15 @@ import { useState } from 'react';
 import { useStreamSchedule } from '../hooks/useStreamSchedule';
 import { StreamCard } from './StreamCard';
 
-export const MediaView = () => {
+interface MediaViewProps {
+  title?: string;
+  color?: string;
+}
+
+export const MediaView = ({ title = "Media Team", color = "bg-purple-600" }: MediaViewProps) => {
   const { schedule, isLoading, addStream, removeStream } = useStreamSchedule();
-  
+
+
   // Local form state
   const [topic, setTopic] = useState("");
   const [preacher, setPreacher] = useState("");
@@ -20,10 +26,12 @@ export const MediaView = () => {
   return (
     <div className="max-w-4xl">
       {/* Header Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-6">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">📹 Media Team Scheduler</h2>
-        <p className="text-slate-500 mb-6">Plan upcoming livestreams and assign technical roles.</p>
-
+      <div className={`p-8 rounded-xl shadow-sm text-white ${color}`}>
+        <h1 className="text-3xl font-bold">{title} Dashboard</h1>
+        <p className="opacity-90 mt-2">Plan upcoming livestreams and assign technical roles for {title}.</p>
+      </div>
+      {/* Add Event Form */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mt-6 space-y-6">
         {/* The Add Form */}
         <form onSubmit={handleSubmit} className="flex gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
           <div className="flex-1">

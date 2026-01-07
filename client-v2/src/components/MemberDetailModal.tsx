@@ -15,7 +15,7 @@ export const MemberDetailModal = ({ member, onClose }: MemberDetailModalProps) =
         
         {/* Header Background */}
         <div className={`h-32 ${member.gender === 'Male' ? 'bg-pink-600' : 'bg-blue-600'}`}>
-          <button onClick={onClose} className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition">
+          <button type="button" onClick={onClose} className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition" aria-label="Close sidebar" title="Close sidebar">
             <X size={20} />
           </button>
         </div>
