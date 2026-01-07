@@ -2,97 +2,107 @@ import { useState } from 'react';
 import { useMembers } from '../hooks/useMembers';
 import { AddMemberModal } from './AddMemberModal'; 
 import { MemberDetailModal } from './MemberDetailModal';
+import { type Member } from '../types'; // 1. IMPORT THE MEMBER TYPE
 
 export const MembersView = () => {
-  const { members, isLoading, error, addMember, deleteMember } = useMembers();
+  //  2. USE THE CUSTOM HOOK
+  const { members, isLoading, addMember, deleteMember } = useMembers();
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<null | Member>(null);
 
   const handleSaveMember = async (formData: FormData) => {
     await addMember(formData);
-    // We don't need window.location.reload() anymore!
-    // The hook will auto-refresh the list.
   };
 
   return (
     <div className="space-y-6">
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-slate-800">Church Directory</h2>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm transition"
-        >
-          + Add New Member
-        </button>
-      </div>
-      {/*RENDER DETAIL MODAL */}
-      <MemberDetailModal 
-        member={selectedMember} 
-        onClose={() => setSelectedMember(null)} 
-      />
-
-      {/* The Modal Component */}
-      {isModalOpen && (
-        <AddMemberModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-          onSave={handleSaveMember} 
-        />
-      )}
-      {/* Existing Table Code... (Update columns to show First Name / Surname) */}
-      {!isLoading && (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b">
-              <tr>
-                <th className="p-3">Photo</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Mobile</th>
-                <th className="p-3">Role</th>
-                <th className="p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-            {members.map(member => (
-              <tr key={member.id} className="hover:bg-slate-50 group cursor-pointer" onClick={() => setSelectedMember(member)}>
-                  <td className="p-3">
-                    {member.photo_url ? (
-                      <img src={member.photo_url} alt="Profile" className="w-10 h-10 rounded-full object-cover border" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold">
-                        {member.first_name[0]}
-                      </div>
-                    )}
-                  </td>
-                  <td className="p-3 font-medium text-slate-800">
-                    {member.first_name} {member.surname}
-                  </td>
-                  <td className="p-3 text-slate-500">{member.mobile}</td>
-                  <td className="p-3">
-                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-bold">{member.role}</span>
-                  </td>
-                  <td className="p-4 text-right">
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent row click
-                      setSelectedMember(member);
-                    }}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-bold px-3 py-1 bg-blue-50 rounded hover:bg-blue-100 transition"
-                  >
-                    View Profile
-                  </button>
-                </td>
-                  <td className="p-3 text-right">
-                    <button onClick={() => deleteMember(member.id)} className="text-red-400 hover:text-red-600">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-slate-800">Church Directory</h2>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm transition"
+          >
+            + Add New Member
+          </button>
         </div>
-      )}
-    </div>
+
+        {/* RENDER DETAIL MODAL */}
+        <MemberDetailModal 
+          member={selectedMember} 
+          onClose={() => setSelectedMember(null)} 
+        />
+
+        {/* The Modal Component */}
+        {isModalOpen && (
+          <AddMemberModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+            onSave={handleSaveMember} 
+          />
+        )}
+
+        {/* Existing Table Code */}
+        {!isLoading && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 border-b">
+                <tr>
+                  <th className="p-3">Photo</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Mobile</th>
+                  <th className="p-3">Role</th>
+                  <th className="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {members.map(member => (
+                  <tr key={member.id} className="hover:bg-slate-50 group cursor-pointer" onClick={() => setSelectedMember(member)}>
+                    <td className="p-3">
+                      {member.photo_url ? (
+                        <img src={member.photo_url} alt="Profile" className="w-10 h-10 rounded-full object-cover border" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold">
+                          {member.first_name[0]}
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-3 font-medium text-slate-800">
+                      {member.first_name} {member.surname}
+                    </td>
+                    <td className="p-3 text-slate-500">{member.mobile}</td>
+                    <td className="p-3">
+                      <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-bold">{member.role}</span>
+                    </td>
+                    <td className="p-4 text-right flex justify-end gap-2">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation(); 
+                          setSelectedMember(member);
+                        }}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-bold px-3 py-1 bg-blue-50 rounded hover:bg-blue-100 transition"
+                      >
+                        View
+                      </button>
+                      
+                      <button 
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           deleteMember(member.id);
+                        }} 
+                        className="text-red-400 hover:text-red-600 text-sm font-bold px-3 py-1 hover:bg-red-50 rounded transition"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
