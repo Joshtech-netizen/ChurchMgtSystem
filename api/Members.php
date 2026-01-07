@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // 2. DATABASE CONFIG
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db_name = "coc-eff_db"; // Make sure this matches your DB name exactly
+$host = "sql103.infinityfree.com";
+$user = "if0_40851054";
+$pass = "coceffiduase25";
+$db_name = "if0_40851054_church"; 
 
 $conn = new mysqli($host, $user, $pass, $db_name);
 

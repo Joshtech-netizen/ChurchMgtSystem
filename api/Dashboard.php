@@ -3,7 +3,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-$conn = new mysqli("localhost", "root", "", "coc-eff_db");
+$conn = new mysqli("sql103.infinityfree.com", "if0_40851054", "coceffiduase25", "if0_40851054_church");
 
 if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed"]));

@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') { http_response_code(200); exit(); }
 
-$conn = new mysqli("localhost", "root", "", "coc-eff_db");
+$conn = new mysqli("sql103.infinityfree.com", "if0_40851054", "coceffiduase25", "if0_40851054_church");
 
 $data = json_decode(file_get_contents("php://input"));
 

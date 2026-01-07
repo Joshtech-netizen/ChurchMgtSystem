@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') { http_response_code(200); exit(); }
 
-$host = "localhost"; $user = "root"; $pass = ""; $db_name = "coc-eff_db";
+$host = "sql103.infinityfree.com"; $user = "if0_40851054"; $pass = "coceffiduase25"; $db_name = "if0_40851054_church";
 $conn = new mysqli($host, $user, $pass, $db_name);
 
 if ($conn->connect_error) {
